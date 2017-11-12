@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 import co.hanul.hybridapp.MainActivity;
 
-public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
+public class HybridAppFirebaseInstanceIDService extends FirebaseInstanceIdService {
 
     @Override
     public void onTokenRefresh() {

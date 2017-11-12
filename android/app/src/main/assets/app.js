@@ -5,7 +5,7 @@ RUN(() => {
 		alert('푸시 키 : ' + pushKey);
 		
 		POST({
-			url : 'http://192.168.0.7:8112/save-push-key',
+			url : 'http://192.168.0.7:8112/save-android-push-key',
 			params : {
 				pushKey : pushKey
 			}

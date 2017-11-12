@@ -9,10 +9,10 @@ PushTestServer.MAIN = METHOD({
 			let uri = requestInfo.uri;
 			let params = requestInfo.params;
 			
-			if (uri === 'save-push-key') {
+			if (uri === 'save-android-push-key') {
 				
 				pushKeyDB.create({
-					pushKey : params.pushKey
+					androidKey : params.pushKey
 				}, (savedData) => {
 					
 					response({
@@ -23,6 +23,26 @@ PushTestServer.MAIN = METHOD({
 						}
 					});
 				});
+				
+				return false;
+			}
+			
+			if (uri === 'send-push') {
+				
+				pushKeyDB.find({
+					isFindAll : true
+				}, EACH((savedData) => {
+					
+					if (savedData.androidKey !== undefined) {
+						
+						UPUSH.ANDROID_PUSH({
+							regId : savedData.androidKey,
+							data : {
+								message : params.message
+							}
+						});
+					}
+				}));
 				
 				return false;
 			}
