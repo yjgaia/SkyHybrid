@@ -9,8 +9,37 @@ global.Native = OBJECT({
 			callbackCount += 1;
 			return callbackId;
 		};
+		
+		let pushKey;
+		let registerPushKeyHandler;
 
-		__Native.init(CONFIG.isDevMode, CONFIG.unityAdsGameId);
+		__Native.init(CONFIG.isDevMode, registerCallback((data) => {
+			
+			pushKey = data.pushKey;
+			
+			if (registerPushKeyHandler !== undefined) {
+				registerPushKeyHandler(pushKey);
+			}
+			
+		}), CONFIG.unityAdsGameId);
+
+		let setRegisterPushKeyHandler = self.setRegisterPushKeyHandler = (handler) => {
+			//REQUIRED: handler
+
+			if (pushKey !== undefined) {
+				handler(pushKey);
+			} else {
+				registerPushKeyHandler = handler;
+			}
+		};
+
+		let removePushKey = self.removePushKey = () => {
+			__Native.removePushKey();
+		};
+
+		let generateNewPushKey = self.generateNewPushKey = () => {
+			__Native.generateNewPushKey();
+		};
 
 		let loadPurchased = self.loadPurchased = (handlers) => {
 			//REQUIRED: handlers

@@ -31,3 +31,5 @@ dependencies {
     compile 'com.google.android.gms:play-services-games:11.6.0'
     implementation project(':unity-ads')
 }
+
+apply plugin: 'com.google.gms.google-services'

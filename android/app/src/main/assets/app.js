@@ -1,6 +1,24 @@
 RUN(() => {
 	INIT_OBJECTS();
 	
+	Native.setRegisterPushKeyHandler((pushKey) => {
+		alert('푸시 키 : ' + pushKey);
+		
+		POST({
+			url : 'http://192.168.0.7:8112/save-push-key',
+			params : {
+				pushKey : pushKey
+			}
+		}, {
+			error : () => {
+				alert('푸시 키를 서버에 저장할 수 없습니다.');
+			},
+			success : (result) => {
+				alert('푸시 키 서버 저장 완료: ' + result);
+			}
+		});
+	});
+	
 	let buttonStyle = {
 		display : 'block',
 		backgroundColor : '#333',
@@ -47,6 +65,17 @@ RUN(() => {
 						alert(JSON.stringify(dataSet));
 					}
 				});
+			}
+		}
+	}).appendTo(BODY);
+	
+	A({
+		style : buttonStyle,
+		c : '푸시 키 재생성',
+		on : {
+			tap : () => {
+				Native.removePushKey();
+				Native.generateNewPushKey();
 			}
 		}
 	}).appendTo(BODY);

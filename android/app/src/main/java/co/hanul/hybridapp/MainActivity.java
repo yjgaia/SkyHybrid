@@ -14,10 +14,13 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
 
     private BillingController billingController;
     private UnityAdsController unityAdsController;
+
+    public static String registeredPushKey;
+    public static JSCallback registerPushKeyHandler;
 
     private void changeToFullscreen() {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -107,8 +113,39 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @JavascriptInterface
-        public void init(boolean isDevMode, String unityAdsGameId) {
+        public void init(boolean isDevMode, String registerPushKeyHandlerName, String unityAdsGameId) {
+
+            if (registeredPushKey == null) {
+                registerPushKeyHandler = new JSCallback(webView, registerPushKeyHandlerName);
+            }
+
+            else {
+
+                JSONObject data = new JSONObject();
+                try {
+                    data.put("pushKey", registeredPushKey);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                new JSCallback(webView, registerPushKeyHandlerName).call(data);
+            }
+
             unityAdsController = new UnityAdsController((MainActivity) context, unityAdsGameId, isDevMode);
+        }
+
+        @JavascriptInterface
+        public void removePushKey() {
+            try {
+                FirebaseInstanceId.getInstance().deleteInstanceId();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @JavascriptInterface
+        public void generateNewPushKey() {
+            FirebaseInstanceId.getInstance().getToken();
         }
 
         @JavascriptInterface
