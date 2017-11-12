@@ -89,8 +89,15 @@ global.Native = OBJECT({
 			__Native.showUnityAd(registerCallback(errorHandler), registerCallback(callback));
 		};
 
-		let loginGameService = self.loginGameService = () => {
+		let loginGameService = self.loginGameService = (handlers) => {
+			//REQUIRED: handlers
+			//OPTIONAL: handlers.error
+			//REQUIRED: handlers.success
+
+			let errorHandler = handlers.error;
+			let callback = handlers.success;
 			
+			__Native.loginGameService(registerCallback(errorHandler), registerCallback(callback));
 		};
 		
 		let logoutGameService = self.logoutGameService = () => {
@@ -98,7 +105,7 @@ global.Native = OBJECT({
 		};
 		
 		let showAchievements = self.showAchievements = () => {
-			
+			__Native.showAchievements();
 		};
 		
 		let unlockAchievement = self.unlockAchievement = () => {

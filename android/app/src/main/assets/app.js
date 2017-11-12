@@ -102,4 +102,33 @@ RUN(() => {
 			}
 		}
 	}).appendTo(BODY);
+	
+	A({
+		style : buttonStyle,
+		c : '구글 게임 서비스 로그인',
+		on : {
+			tap : () => {
+				
+				Native.loginGameService({
+					error : () => {
+						alert('구글 게임 서비스 로그인에 실패하였습니다.');
+					},
+					success : () => {
+						alert('로그인 성공!');
+					}
+				});
+			}
+		}
+	}).appendTo(BODY);
+	
+	A({
+		style : buttonStyle,
+		c : '구글 게임 업적 보기',
+		on : {
+			tap : () => {
+				
+				Native.showAchievements();
+			}
+		}
+	}).appendTo(BODY);
 });
