@@ -19,6 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import co.hanul.hybridapp.JSCallback;
@@ -28,106 +29,130 @@ public class BillingController {
     private Activity activity;
     private BillingClient billingClient;
 
-    public BillingController(Activity activity, List<String> skuIds) {
+    private JSCallback purchaseErrorHandler;
+    private JSCallback purchaseCancelHandler;
+    private JSCallback purchaseCallback;
+
+    private boolean isServiceConnected;
+
+    private void executeServiceRequest(Runnable runnable) {
+
+        if (isServiceConnected == true) {
+            if (runnable != null) {
+                runnable.run();
+            }
+        } else {
+
+            billingClient.startConnection(new BillingClientStateListener() {
+                @Override
+                public void onBillingSetupFinished(@BillingClient.BillingResponse int billingResponseCode) {
+                    isServiceConnected = true;
+                }
+
+                @Override
+                public void onBillingServiceDisconnected() {
+                    isServiceConnected = false;
+                }
+            });
+        }
+    }
+
+    public BillingController(Activity activity) {
         this.activity = activity;
 
         billingClient = BillingClient.newBuilder(activity).setListener(new PurchasesUpdatedListener() {
 
             @Override
             public void onPurchasesUpdated(int responseCode, @Nullable List<Purchase> purchases) {
-                if (responseCode == BillingClient.BillingResponse.OK
-                        && purchases != null) {
-                    for (Purchase purchase : purchases) {
-                        handlePurchase(purchase);
-                    }
-                } else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {
-                    // Handle an error caused by a user cancelling the purchase flow.
-                } else {
-                    // Handle any other error codes.
-                }
-            }
-
-            private void handlePurchase(Purchase purchase) {
-                //TODO: 구현하기
-            }
-        }).build();
-
-        billingClient.startConnection(new BillingClientStateListener() {
-            @Override
-            public void onBillingSetupFinished(@BillingClient.BillingResponse int billingResponseCode) {
-                if (billingResponseCode == BillingClient.BillingResponse.OK) {
-                    // The billing client is ready. You can query purchases here.
-                }
-            }
-            @Override
-            public void onBillingServiceDisconnected() {
-                // Try to restart the connection on the next request to
-                // Google Play by calling the startConnection() method.
-            }
-        });
-
-        SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
-        params.setSkusList(skuIds).setType(BillingClient.SkuType.INAPP);
-        billingClient.querySkuDetailsAsync(params.build(), new SkuDetailsResponseListener() {
-            @Override
-            public void onSkuDetailsResponse(int responseCode, List<SkuDetails> skuDetailsList) {
-                // Process the result.
-
-                if (responseCode == BillingClient.BillingResponse.OK
-                        && skuDetailsList != null) {
-
-                    for (SkuDetails skuDetails : skuDetailsList) {
-                    }
-                }
-            }
-        });
-    }
-
-    public void loadPurchased(final JSCallback errorHandler, final JSCallback callback) {
-
-        billingClient.queryPurchaseHistoryAsync(BillingClient.SkuType.INAPP, new PurchaseHistoryResponseListener() {
-            @Override
-            public void onPurchaseHistoryResponse(int responseCode, List<Purchase> purchasesList) {
-                if (responseCode == BillingClient.BillingResponse.OK && purchasesList != null) {
+                if (responseCode == BillingClient.BillingResponse.OK && purchases != null) {
 
                     JSONArray dataSet = new JSONArray();
-                    for (Purchase purchase : purchasesList) {
-                        // Process the result.
-                        Log.d("HybridApp", "purchase: " + purchase);
-
+                    for (Purchase purchase : purchases) {
                         JSONObject data = new JSONObject();
                         try {
-                            data.put("skuId", purchase.getSku());
+                            data.put("productId", purchase.getSku());
+                            data.put("purchaseToken", purchase.getPurchaseToken());
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                         dataSet.put(data);
                     }
 
-                    callback.callDataSet(dataSet);
+                    purchaseCallback.callDataSet(dataSet);
+                }
+
+                else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {
+                    purchaseCancelHandler.call(new JSONObject());
                 }
 
                 else {
-                    errorHandler.call(new JSONObject());
+                    purchaseErrorHandler.call(new JSONObject());
                 }
+
+                purchaseErrorHandler = null;
+                purchaseCancelHandler = null;
+                purchaseCallback = null;
+            }
+        }).build();
+
+        executeServiceRequest(null);
+    }
+
+    public void loadPurchased(final JSCallback errorHandler, final JSCallback callback) {
+        executeServiceRequest(new Runnable() {
+            @Override
+            public void run() {
+
+                billingClient.queryPurchaseHistoryAsync(BillingClient.SkuType.INAPP, new PurchaseHistoryResponseListener() {
+                    @Override
+                    public void onPurchaseHistoryResponse(int responseCode, List<Purchase> purchases) {
+                        if (responseCode == BillingClient.BillingResponse.OK && purchases != null) {
+
+                            JSONArray dataSet = new JSONArray();
+                            for (Purchase purchase : purchases) {
+                                JSONObject data = new JSONObject();
+                                try {
+                                    data.put("productId", purchase.getSku());
+                                    data.put("purchaseToken", purchase.getPurchaseToken());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                dataSet.put(data);
+                            }
+
+                            callback.callDataSet(dataSet);
+                        }
+
+                        else {
+                            errorHandler.call(new JSONObject());
+                        }
+                    }
+                });
             }
         });
     }
 
-    public void purchase(String skuId, JSCallback errorHandler, JSCallback callback) {
+    public void purchase(final String productId, JSCallback errorHandler, JSCallback cancelHandler, JSCallback callback) {
 
-        BillingFlowParams flowParams = BillingFlowParams.newBuilder()
-                .setSku(skuId)
-                .setType(BillingClient.SkuType.INAPP)
-                .build();
+        purchaseErrorHandler = errorHandler;
+        purchaseCancelHandler = cancelHandler;
+        purchaseCallback = callback;
 
-        int responseCode = billingClient.launchBillingFlow(activity, flowParams);
+        executeServiceRequest(new Runnable() {
+            @Override
+            public void run() {
 
-        Log.d("HybridApp", "responseCode: " + responseCode);
+                billingClient.launchBillingFlow(activity, BillingFlowParams.newBuilder()
+                        .setSku(productId)
+                        .setType(BillingClient.SkuType.INAPP)
+                        .build());
+            }
+        });
     }
 
     public void consumePurchase(String purchaseToken, JSCallback errorHandler, JSCallback callback) {
+
+        //TODO: 작성중
 
         billingClient.consumeAsync(purchaseToken, new ConsumeResponseListener() {
             @Override

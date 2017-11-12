@@ -15,7 +15,12 @@ import android.webkit.WebView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import co.hanul.hybridapp.iap.BillingController;
 import co.hanul.hybridapp.unityads.UnityAdsController;
@@ -55,7 +60,8 @@ public class MainActivity extends AppCompatActivity {
         // 앱 실행중에는 화면이 꺼지지 않도록
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        billingController = new BillingController(this, Arrays.asList("iap_test_item"));
+        // 각종 컨트롤러 생성
+        billingController = new BillingController(this);
 
         // 웹뷰 디버깅 모드 ON
         WebView.setWebContentsDebuggingEnabled(true);
@@ -69,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
                 new AlertDialog.Builder(view.getContext())
+                        .setCancelable(false)
                         .setMessage(message)
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
@@ -110,8 +117,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @JavascriptInterface
-        public void purchase(String skuId, String errorHandlerName, String callbackName) {
-            billingController.purchase(skuId, new JSCallback(webView, errorHandlerName), new JSCallback(webView, callbackName));
+        public void purchase(String skuId, String errorHandlerName, String cancelHandlerName, String callbackName) {
+            billingController.purchase(skuId, new JSCallback(webView, errorHandlerName), new JSCallback(webView, cancelHandlerName), new JSCallback(webView, callbackName));
         }
 
         @JavascriptInterface

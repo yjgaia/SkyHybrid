@@ -27,12 +27,14 @@ global.Native = OBJECT({
 			//REQUIRED: skuId
 			//REQUIRED: handlers
 			//OPTIONAL: handlers.error
+			//OPTIONAL: handlers.cancel
 			//REQUIRED: handlers.success
 
 			let errorHandler = handlers.error;
+			let cancelHandler = handlers.cancel;
 			let callback = handlers.success;
 
-			__Native.purchase(skuId, registerCallback(errorHandler), registerCallback(callback));
+			__Native.purchase(skuId, registerCallback(errorHandler), registerCallback(cancelHandler), registerCallback(callback));
 		};
 		
 		let consumePurchase = self.consumePurchase = (purchaseToken, handlers) => {
