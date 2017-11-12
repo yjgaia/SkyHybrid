@@ -15,11 +15,21 @@ public class JSCallback {
         this.callbackName = callbackName;
     }
 
-    public void call(JSONObject json) {
-        webView.evaluateJavascript(callbackName + "(" + json + ");", null);
+    public void call(final JSONObject json) {
+        webView.post(new Runnable() {
+            @Override
+            public void run() {
+                webView.evaluateJavascript(callbackName + "(" + json + ");", null);
+            }
+        });
     }
 
-    public void callDataSet(JSONArray jsonArray) {
-        webView.evaluateJavascript(callbackName + "(" + jsonArray + ");", null);
+    public void callDataSet(final JSONArray jsonArray) {
+        webView.post(new Runnable() {
+            @Override
+            public void run() {
+                webView.evaluateJavascript(callbackName + "(" + jsonArray + ");", null);
+            }
+        });
     }
 }

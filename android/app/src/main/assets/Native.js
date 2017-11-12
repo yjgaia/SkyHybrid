@@ -10,7 +10,7 @@ global.Native = OBJECT({
 			return callbackId;
 		};
 
-		__Native.init(CONFIG.unityAdsGameId);
+		__Native.init(CONFIG.isDevMode, CONFIG.unityAdsGameId);
 
 		let loadPurchased = self.loadPurchased = (handlers) => {
 			//REQUIRED: handlers
@@ -47,18 +47,43 @@ global.Native = OBJECT({
 			__Native.consumePurchase(purchaseToken, registerCallback(errorHandler), registerCallback(callback));
 		};
 
-		let showUnityAd = self.showUnityAd = (callback) => {
-			__Native.showUnityAd(registerCallback(callback));
+		let showUnityAd = self.showUnityAd = (handlers) => {
+			//REQUIRED: handlers
+			//OPTIONAL: handlers.error
+			//REQUIRED: handlers.success
+
+			let errorHandler = handlers.error;
+			let callback = handlers.success;
+			
+			__Native.showUnityAd(registerCallback(errorHandler), registerCallback(callback));
 		};
 
-		let loginGameService = self.loginGameService = () => {};
-		let logoutGameService = self.logoutGameService = () => {};
+		let loginGameService = self.loginGameService = () => {
+			
+		};
 		
-		let showAchievements = self.showAchievements = () => {};
-		let unlockAchievement = self.unlockAchievement = () => {};
-		let incrementAchievement = self.incrementAchievement = () => {};
+		let logoutGameService = self.logoutGameService = () => {
+			
+		};
 		
-		let showLeaderboards = self.showLeaderboards = () => {};
-		let updateLeaderboardScore = self.updateLeaderboardScore = () => {};
+		let showAchievements = self.showAchievements = () => {
+			
+		};
+		
+		let unlockAchievement = self.unlockAchievement = () => {
+			
+		};
+		
+		let incrementAchievement = self.incrementAchievement = () => {
+			
+		};
+		
+		let showLeaderboards = self.showLeaderboards = () => {
+			
+		};
+		
+		let updateLeaderboardScore = self.updateLeaderboardScore = () => {
+			
+		};
 	}
 });

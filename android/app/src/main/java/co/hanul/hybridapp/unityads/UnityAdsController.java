@@ -16,17 +16,24 @@ public class UnityAdsController implements IUnityAdsListener {
     private Activity activity;
     private JSCallback showCallback;
 
-    public UnityAdsController(Activity activity, String gameId) {
+    public UnityAdsController(Activity activity, String gameId, boolean isDevMode) {
         this.activity = activity;
-        UnityAds.initialize(activity, gameId, this, true);
+        UnityAds.initialize(activity, gameId, this, isDevMode);
     }
 
-    public void show(JSCallback callback) {
+    public void show(JSCallback errorHandler, JSCallback callback) {
         showCallback = callback;
 
         if (UnityAds.isReady() == true) {
             UnityAds.show(activity, "rewardedVideo");
+        } else {
+            errorHandler.call(new JSONObject());
         }
+    }
+
+    @Override
+    public void onUnityAdsFinish(String s, UnityAds.FinishState finishState) {
+        showCallback.call(new JSONObject());
     }
 
     @Override
@@ -34,19 +41,6 @@ public class UnityAdsController implements IUnityAdsListener {
 
     @Override
     public void onUnityAdsStart(String s) {}
-
-    @Override
-    public void onUnityAdsFinish(String s, UnityAds.FinishState finishState) {
-        Log.d("UnityAds", s);
-
-        JSONObject json = new JSONObject();
-        try {
-            json.put("s", s);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        showCallback.call(json);
-    }
 
     @Override
     public void onUnityAdsError(UnityAds.UnityAdsError unityAdsError, String s) {}

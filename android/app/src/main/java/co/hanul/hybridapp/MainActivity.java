@@ -23,6 +23,7 @@ import co.hanul.hybridapp.unityads.UnityAdsController;
 public class MainActivity extends AppCompatActivity {
 
     private WebView webView;
+
     private BillingController billingController;
     private UnityAdsController unityAdsController;
 
@@ -71,11 +72,12 @@ public class MainActivity extends AppCompatActivity {
                         .setMessage(message)
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {}
+                            public void onClick(DialogInterface dialog, int which) {
+                                result.cancel();
+                            }
                         })
                         .create()
                         .show();
-                result.confirm();
                 return true;
             }
         });
@@ -98,8 +100,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @JavascriptInterface
-        public void init(String unityAdsGameId) {
-            unityAdsController = new UnityAdsController((MainActivity) context, unityAdsGameId);
+        public void init(boolean isDevMode, String unityAdsGameId) {
+            unityAdsController = new UnityAdsController((MainActivity) context, unityAdsGameId, isDevMode);
         }
 
         @JavascriptInterface
@@ -118,8 +120,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @JavascriptInterface
-        public void showUnityAd(String callbackName) {
-            unityAdsController.show(new JSCallback(webView, callbackName));
+        public void showUnityAd(String errorHandlerName, String callbackName) {
+            unityAdsController.show(new JSCallback(webView, errorHandlerName), new JSCallback(webView, callbackName));
+        }
+
+        @JavascriptInterface
+        public void loginGameService(String callbackName) {
+
         }
     }
 }
