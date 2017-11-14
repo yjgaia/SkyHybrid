@@ -41,6 +41,19 @@ global.Native = OBJECT({
 			__Native.generateNewPushKey();
 		};
 
+		let initPurchaseService = self.initPurchaseService = (handlers) => {
+			//REQUIRED: handlers
+			//OPTIONAL: handlers.purchaseError
+			//OPTIONAL: handlers.purchaseCancel
+			//REQUIRED: handlers.purchaseSuccess
+
+			let purchaseErrorHandler = handlers.purchaseError;
+			let purchaseCancelHandler = handlers.purchaseCancel;
+			let purchaseSuccessHandler = handlers.purchaseSuccess;
+
+			__Native.initPurchaseService(registerCallback(purchaseErrorHandler), registerCallback(purchaseCancelHandler), registerCallback(purchaseSuccessHandler));
+		};
+
 		let loadPurchased = self.loadPurchased = (handlers) => {
 			//REQUIRED: handlers
 			//OPTIONAL: handlers.error
@@ -52,18 +65,10 @@ global.Native = OBJECT({
 			__Native.loadPurchased(registerCallback(errorHandler), registerCallback(callback));
 		};
 
-		let purchase = self.purchase = (skuId, handlers) => {
+		let requestPurchase = self.requestPurchase = (skuId) => {
 			//REQUIRED: skuId
-			//REQUIRED: handlers
-			//OPTIONAL: handlers.error
-			//OPTIONAL: handlers.cancel
-			//REQUIRED: handlers.success
 
-			let errorHandler = handlers.error;
-			let cancelHandler = handlers.cancel;
-			let callback = handlers.success;
-
-			__Native.purchase(skuId, registerCallback(errorHandler), registerCallback(cancelHandler), registerCallback(callback));
+			__Native.requestPurchase(skuId);
 		};
 		
 		let consumePurchase = self.consumePurchase = (purchaseToken, handlers) => {
@@ -100,28 +105,42 @@ global.Native = OBJECT({
 			__Native.loginGameService(registerCallback(errorHandler), registerCallback(callback));
 		};
 		
-		let logoutGameService = self.logoutGameService = () => {
+		let logoutGameService = self.logoutGameService = (callback) => {
+			//REQUIRED: callback
 			
+			__Native.logoutGameService(registerCallback(callback));
 		};
 		
-		let showAchievements = self.showAchievements = () => {
-			__Native.showAchievements();
+		let showAchievements = self.showAchievements = (errorHandler) => {
+			//REQUIRED: errorHandler
+			
+			__Native.showAchievements(registerCallback(errorHandler));
 		};
 		
-		let unlockAchievement = self.unlockAchievement = () => {
+		let unlockAchievement = self.unlockAchievement = (achievementId) => {
+			//REQUIRED: achievementId
 			
+			__Native.unlockAchievement(achievementId);
 		};
 		
-		let incrementAchievement = self.incrementAchievement = () => {
+		let incrementAchievement = self.incrementAchievement = (achievementId) => {
+			//REQUIRED: achievementId
 			
+			__Native.incrementAchievement(achievementId);
 		};
 		
-		let showLeaderboards = self.showLeaderboards = () => {
+		let showLeaderboards = self.showLeaderboards = (leaderboardId, errorHandler) => {
+			//REQUIRED: leaderboardId
+			//REQUIRED: errorHandler
 			
+			__Native.showLeaderboards(leaderboardId, registerCallback(errorHandler));
 		};
 		
-		let updateLeaderboardScore = self.updateLeaderboardScore = () => {
+		let updateLeaderboardScore = self.updateLeaderboardScore = (leaderboardId, score) => {
+			//REQUIRED: leaderboardId
+			//REQUIRED: score
 			
+			__Native.updateLeaderboardScore(leaderboardId, score);
 		};
 	}
 });

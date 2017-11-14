@@ -29,10 +29,6 @@ public class BillingController {
     private Activity activity;
     private BillingClient billingClient;
 
-    private JSCallback purchaseErrorHandler;
-    private JSCallback purchaseCancelHandler;
-    private JSCallback purchaseCallback;
-
     private boolean isServiceConnected;
 
     private void executeServiceRequest(Runnable runnable) {
@@ -57,7 +53,7 @@ public class BillingController {
         }
     }
 
-    public BillingController(Activity activity) {
+    public BillingController(Activity activity, final JSCallback purchaseErrorHandler, final JSCallback purchaseCancelHandler, final JSCallback purchaseSuccessHandler) {
         this.activity = activity;
 
         billingClient = BillingClient.newBuilder(activity).setListener(new PurchasesUpdatedListener() {
@@ -78,7 +74,7 @@ public class BillingController {
                         dataSet.put(data);
                     }
 
-                    purchaseCallback.callDataSet(dataSet);
+                    purchaseSuccessHandler.callDataSet(dataSet);
                 }
 
                 else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {
@@ -88,10 +84,6 @@ public class BillingController {
                 else {
                     purchaseErrorHandler.call(new JSONObject());
                 }
-
-                purchaseErrorHandler = null;
-                purchaseCancelHandler = null;
-                purchaseCallback = null;
             }
         }).build();
 
@@ -132,12 +124,7 @@ public class BillingController {
         });
     }
 
-    public void purchase(final String productId, JSCallback errorHandler, JSCallback cancelHandler, JSCallback callback) {
-
-        purchaseErrorHandler = errorHandler;
-        purchaseCancelHandler = cancelHandler;
-        purchaseCallback = callback;
-
+    public void requestPurchase(final String productId) {
         executeServiceRequest(new Runnable() {
             @Override
             public void run() {
@@ -150,17 +137,21 @@ public class BillingController {
         });
     }
 
-    public void consumePurchase(String purchaseToken, JSCallback errorHandler, JSCallback callback) {
-
-        //TODO: 작성중
-
-        billingClient.consumeAsync(purchaseToken, new ConsumeResponseListener() {
+    public void consumePurchase(final String purchaseToken, final JSCallback errorHandler, final JSCallback callback) {
+        executeServiceRequest(new Runnable() {
             @Override
-            public void onConsumeResponse(int responseCode, String purchaseToken) {
-                if (responseCode == BillingClient.BillingResponse.OK) {
-                    // Handle the success of the consume operation.
-                    // For example, increase the number of coins inside the user's basket.
-                }
+            public void run() {
+
+                billingClient.consumeAsync(purchaseToken, new ConsumeResponseListener() {
+                    @Override
+                    public void onConsumeResponse(int responseCode, String purchaseToken) {
+                        if (responseCode == BillingClient.BillingResponse.OK) {
+                            callback.call(new JSONObject());
+                        } else {
+                            errorHandler.call(new JSONObject());
+                        }
+                    }
+                });
             }
         });
     }
