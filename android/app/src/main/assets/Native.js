@@ -24,7 +24,11 @@ global.Native = OBJECT({
 		}), CONFIG.unityAdsGameId);
 
 		let setRegisterPushKeyHandler = self.setRegisterPushKeyHandler = (handler) => {
-			//REQUIRED: handler
+			//OPTIONAL: handler
+			
+			if (handler === undefined) {
+				handler = () => {};
+			}
 
 			if (pushKey !== undefined) {
 				handler(pushKey);
@@ -41,34 +45,24 @@ global.Native = OBJECT({
 			__Native.generateNewPushKey();
 		};
 
-		let initPurchaseService = self.initPurchaseService = (handlers) => {
-			//REQUIRED: handlers
-			//OPTIONAL: handlers.purchaseError
-			//OPTIONAL: handlers.purchaseCancel
-			//REQUIRED: handlers.purchaseSuccess
-
-			let purchaseErrorHandler = handlers.purchaseError;
-			let purchaseCancelHandler = handlers.purchaseCancel;
-			let purchaseSuccessHandler = handlers.purchaseSuccess;
-
-			__Native.initPurchaseService(registerCallback(purchaseErrorHandler), registerCallback(purchaseCancelHandler), registerCallback(purchaseSuccessHandler));
+		let initPurchaseService = self.initPurchaseService = (loadPurchasedHandler) => {
+			//REQUIRED: loadPurchasedHandler
+			
+			__Native.initPurchaseService(registerCallback(loadPurchasedHandler));
 		};
 
-		let loadPurchased = self.loadPurchased = (handlers) => {
+		let purchase = self.purchase = (skuId, handlers) => {
+			//REQUIRED: skuId
 			//REQUIRED: handlers
 			//OPTIONAL: handlers.error
+			//OPTIONAL: handlers.cancel
 			//REQUIRED: handlers.success
 
 			let errorHandler = handlers.error;
+			let cancelHandler = handlers.cancel;
 			let callback = handlers.success;
 
-			__Native.loadPurchased(registerCallback(errorHandler), registerCallback(callback));
-		};
-
-		let requestPurchase = self.requestPurchase = (skuId) => {
-			//REQUIRED: skuId
-
-			__Native.requestPurchase(skuId);
+			__Native.purchase(skuId, registerCallback(errorHandler), registerCallback(cancelHandler), registerCallback(callback));
 		};
 		
 		let consumePurchase = self.consumePurchase = (purchaseToken, handlers) => {

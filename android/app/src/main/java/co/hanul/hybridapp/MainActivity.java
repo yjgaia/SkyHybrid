@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
@@ -75,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(Settings.mainViewId);
 
         // 전체 화면 설정
         changeToFullscreen();
@@ -95,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         WebView.setWebContentsDebuggingEnabled(true);
 
         // 웹뷰 로드
-        webView = findViewById(R.id.webView);
+        webView = findViewById(Settings.webViewId);
 
         // alert 디자인 변경
         webView.setWebChromeClient(new WebChromeClient() {
@@ -229,18 +228,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @JavascriptInterface
-        public void initPurchaseService(String purchaseErrorHandlerName, String purchaseCancelHandlerName, String purchaseSuccessHandlerName) {
-            billingController = new BillingController(activity, new JSCallback(webView, purchaseErrorHandlerName), new JSCallback(webView, purchaseCancelHandlerName), new JSCallback(webView, purchaseSuccessHandlerName));
+        public void initPurchaseService(String loadPurchasedHandlerName) {
+            billingController = new BillingController(activity, new JSCallback(webView, loadPurchasedHandlerName));
         }
 
         @JavascriptInterface
-        public void loadPurchased(String errorHandlerName, String callbackName) {
-            billingController.loadPurchased(new JSCallback(webView, errorHandlerName), new JSCallback(webView, callbackName));
-        }
-
-        @JavascriptInterface
-        public void requestPurchase(String skuId) {
-            billingController.requestPurchase(skuId);
+        public void purchase(String skuId, String errorHandlerName, String cancelHandlerName, String callbackName) {
+            billingController.purchase(skuId, new JSCallback(webView, errorHandlerName), new JSCallback(webView, cancelHandlerName), new JSCallback(webView, callbackName));
         }
 
         @JavascriptInterface

@@ -31,6 +31,11 @@ public class BillingController {
 
     private boolean isServiceConnected;
 
+    private JSCallback loadPurchasedHandler;
+    private JSCallback purchaseErrorHandler;
+    private JSCallback purchaseCancelHandler;
+    private JSCallback purchaseSuccessHandler;
+
     private void executeServiceRequest(Runnable runnable) {
 
         if (isServiceConnected == true) {
@@ -43,27 +48,9 @@ public class BillingController {
                 @Override
                 public void onBillingSetupFinished(@BillingClient.BillingResponse int billingResponseCode) {
                     isServiceConnected = true;
-                }
-
-                @Override
-                public void onBillingServiceDisconnected() {
-                    isServiceConnected = false;
-                }
-            });
-        }
-    }
-
-    public BillingController(Activity activity, final JSCallback purchaseErrorHandler, final JSCallback purchaseCancelHandler, final JSCallback purchaseSuccessHandler) {
-        this.activity = activity;
-
-        billingClient = BillingClient.newBuilder(activity).setListener(new PurchasesUpdatedListener() {
-
-            @Override
-            public void onPurchasesUpdated(int responseCode, @Nullable List<Purchase> purchases) {
-                if (responseCode == BillingClient.BillingResponse.OK && purchases != null) {
 
                     JSONArray dataSet = new JSONArray();
-                    for (Purchase purchase : purchases) {
+                    for (Purchase purchase : billingClient.queryPurchases(BillingClient.SkuType.INAPP).getPurchasesList()) {
                         JSONObject data = new JSONObject();
                         try {
                             data.put("productId", purchase.getSku());
@@ -74,7 +61,39 @@ public class BillingController {
                         dataSet.put(data);
                     }
 
-                    purchaseSuccessHandler.callDataSet(dataSet);
+                    loadPurchasedHandler.callDataSet(dataSet);
+                }
+
+                @Override
+                public void onBillingServiceDisconnected() {
+                    isServiceConnected = false;
+                }
+            });
+        }
+    }
+
+    public BillingController(Activity activity, JSCallback loadPurchasedHandler) {
+        this.activity = activity;
+        this.loadPurchasedHandler = loadPurchasedHandler;
+
+        billingClient = BillingClient.newBuilder(activity).setListener(new PurchasesUpdatedListener() {
+
+            @Override
+            public void onPurchasesUpdated(int responseCode, @Nullable List<Purchase> purchases) {
+                if (responseCode == BillingClient.BillingResponse.OK && purchases != null) {
+
+                    JSONObject data = new JSONObject();
+                    for (Purchase purchase : purchases) {
+                        try {
+                            data.put("productId", purchase.getSku());
+                            data.put("purchaseToken", purchase.getPurchaseToken());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    }
+
+                    purchaseSuccessHandler.call(data);
                 }
 
                 else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {
@@ -90,41 +109,12 @@ public class BillingController {
         executeServiceRequest(null);
     }
 
-    public void loadPurchased(final JSCallback errorHandler, final JSCallback callback) {
-        executeServiceRequest(new Runnable() {
-            @Override
-            public void run() {
+    public void purchase(final String productId, final JSCallback errorHandler, final JSCallback cancelHandler, final JSCallback successHandler) {
 
-                billingClient.queryPurchaseHistoryAsync(BillingClient.SkuType.INAPP, new PurchaseHistoryResponseListener() {
-                    @Override
-                    public void onPurchaseHistoryResponse(int responseCode, List<Purchase> purchases) {
-                        if (responseCode == BillingClient.BillingResponse.OK && purchases != null) {
+        this.purchaseErrorHandler = errorHandler;
+        this.purchaseCancelHandler = cancelHandler;
+        this.purchaseSuccessHandler = successHandler;
 
-                            JSONArray dataSet = new JSONArray();
-                            for (Purchase purchase : purchases) {
-                                JSONObject data = new JSONObject();
-                                try {
-                                    data.put("productId", purchase.getSku());
-                                    data.put("purchaseToken", purchase.getPurchaseToken());
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                dataSet.put(data);
-                            }
-
-                            callback.callDataSet(dataSet);
-                        }
-
-                        else {
-                            errorHandler.call(new JSONObject());
-                        }
-                    }
-                });
-            }
-        });
-    }
-
-    public void requestPurchase(final String productId) {
         executeServiceRequest(new Runnable() {
             @Override
             public void run() {

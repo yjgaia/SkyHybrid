@@ -13,7 +13,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.Map;
 
 import co.hanul.hybridapp.MainActivity;
-import co.hanul.hybridapp.R;
+import co.hanul.hybridapp.Settings;
 
 public class HybridAppFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -26,8 +26,8 @@ public class HybridAppFirebaseMessagingService extends FirebaseMessagingService 
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, getString(R.string.default_notification_channel_id))
-                    .setSmallIcon(R.drawable.ic_stat_ic_notification)
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "default")
+                    .setSmallIcon(Settings.notificationIconId)
                     .setContentTitle((CharSequence) data.get("title"))
                     .setContentText((CharSequence) data.get("message"))
                     .setAutoCancel(true)

@@ -32,53 +32,40 @@ RUN(() => {
 	
 	let purchaseToken;
 	
-	Native.initPurchaseService({
-		purchaseError : () => {
-			alert('결제할 수 없습니다. 인터넷 연결을 확인해 주시기 바랍니다.');
-		},
-		purchaseCancel : () => {
-			alert('결제를 취소하였습니다.');
-		},
-		purchaseSuccess : (dataSet) => {
+	Native.initPurchaseService((dataSet) => {
+		
+		if (dataSet.length > 0) {
 			purchaseToken = dataSet[0].purchaseToken;
 			
 			consumeButton.empty();
 			consumeButton.append('결제 Consume (' + purchaseToken + ')');
-			
-			alert(JSON.stringify(dataSet));
 		}
+		
+		alert('Consume 되지 않은 결제 기록: ' + JSON.stringify(dataSet));
 	});
 	
 	A({
 		style : buttonStyle,
-		c : '구매 기록 가져오기',
+		c : '결제 테스트 (iap_test_item)',
 		on : {
 			tap : () => {
 				
-				Native.loadPurchased({
+				Native.purchase('iap_test_item', {
 					error : () => {
-						alert('구매 기록을 가져올 수 없습니다. 인터넷 연결을 확인해 주시기 바랍니다.');
+						alert('결제할 수 없습니다. 인터넷 연결을 확인해 주시기 바랍니다.');
 					},
-					success : (dataSet) => {
-						purchaseToken = dataSet[0].purchaseToken;
+					cancel : () => {
+						alert('결제를 취소하였습니다.');
+					},
+					success : (data) => {
+						purchaseToken = data.purchaseToken;
 						
 						consumeButton.empty();
 						consumeButton.append('결제 Consume (' + purchaseToken + ')');
 						
-						alert(JSON.stringify(dataSet));
+						alert('결제 완료: ' + JSON.stringify(data));
 					}
 				});
-			}
-		}
-	}).appendTo(BODY);
-	
-	A({
-		style : buttonStyle,
-		c : '결제 요청 테스트 (iap_test_item)',
-		on : {
-			tap : () => {
-				
-				Native.requestPurchase('iap_test_item');
 			}
 		}
 	}).appendTo(BODY);
@@ -126,12 +113,16 @@ RUN(() => {
 					
 					Native.showUnityAd({
 						error : () => {
-							alert('유니티 광고를 볼 수 없습니다. 인터넷 연결을 확인해 주시기 바랍니다.');
+							alert(MSG({
+								ko : '유니티 광고를 재생할 수 없습니다. 인터넷 연결을 확인해 주시기 바랍니다.'
+							}));
 							
 							retry();
 						},
 						success : () => {
-							alert('유니티 광고 시청 완료');
+							alert(MSG({
+								ko : '유니티 광고 시청 완료'
+							}));
 						}
 					});
 				});

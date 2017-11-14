@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">HybridApp</string>
+    <string name="app_name">Hybrid App</string>
     <string name="app_id">449089889966</string>
-    <string name="default_notification_channel_id">default</string>
 </resources>
