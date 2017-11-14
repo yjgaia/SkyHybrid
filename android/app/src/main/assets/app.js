@@ -52,10 +52,14 @@ RUN(() => {
 				
 				Native.purchase('iap_test_item', {
 					error : () => {
-						alert('결제할 수 없습니다. 인터넷 연결을 확인해 주시기 바랍니다.');
+						alert(MSG({
+							ko : '결제를 진행할 수 없습니다. 인터넷 연결을 확인해 주시기 바랍니다.'
+						}));
 					},
 					cancel : () => {
-						alert('결제를 취소하였습니다.');
+						alert(MSG({
+							ko : '결제를 취소하였습니다.'
+						}));
 					},
 					success : (data) => {
 						purchaseToken = data.purchaseToken;
