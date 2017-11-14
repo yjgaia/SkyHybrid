@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
@@ -56,10 +57,11 @@ public class MainActivity extends AppCompatActivity {
 
     private JSCallback loginGameServiceErrorHandler;
     private JSCallback loginGameServiceCallback;
-    private JSCallback logoutGameServiceCallback;
     private JSCallback showAchievementsErrorHandler;
     private JSCallback showLeaderboardsErrorHandler;
     private String leaderboardId;
+
+    private boolean isSignedGameService;
 
     private void changeToFullscreen() {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -262,14 +264,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @JavascriptInterface
-        public void logoutGameService(String callbackName) {
-            logoutGameServiceCallback = new JSCallback(webView, callbackName);
-
-            GoogleSignInClient signInClient = GoogleSignIn.getClient(activity, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
-            signInClient.signOut().addOnCompleteListener(activity, new OnCompleteListener<Void>() {
+        public void logoutGameService(final String callbackName) {
+            GoogleSignIn.getClient(activity, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN).signOut().addOnCompleteListener(activity, new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    logoutGameServiceCallback.call(new JSONObject());
+                    isSignedGameService = false;
+                    new JSCallback(webView, callbackName).call(new JSONObject());
                 }
             });
         }
@@ -285,12 +285,16 @@ public class MainActivity extends AppCompatActivity {
 
         @JavascriptInterface
         public void unlockAchievement(String achievementId) {
-            Games.getAchievementsClient(activity, GoogleSignIn.getLastSignedInAccount(activity)).unlock(achievementId);
+            if (isSignedGameService == true) {
+                Games.getAchievementsClient(activity, GoogleSignIn.getLastSignedInAccount(activity)).unlock(achievementId);
+            }
         }
 
         @JavascriptInterface
         public void incrementAchievement(String achievementId) {
-            Games.getAchievementsClient(activity, GoogleSignIn.getLastSignedInAccount(activity)).increment(achievementId, 1);
+            if (isSignedGameService == true) {
+                Games.getAchievementsClient(activity, GoogleSignIn.getLastSignedInAccount(activity)).increment(achievementId, 1);
+            }
         }
 
         @JavascriptInterface
@@ -304,8 +308,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @JavascriptInterface
-        public void updateLeaderboardScore(String leaderboardId, int score) {
-            Games.getLeaderboardsClient(activity, GoogleSignIn.getLastSignedInAccount(activity)).submitScore(leaderboardId, score);
+        public void updateLeaderboardScore(String leaderboardId, String score) {
+            if (isSignedGameService == true) {
+                Games.getLeaderboardsClient(activity, GoogleSignIn.getLastSignedInAccount(activity)).submitScore(leaderboardId, Integer.parseInt(score));
+            }
         }
     }
 
@@ -316,6 +322,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == RC_LOGIN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(intent);
             if (result.isSuccess()) {
+                isSignedGameService = true;
                 loginGameServiceCallback.call(new JSONObject());
             } else {
                 loginGameServiceErrorHandler.call(new JSONObject());
@@ -325,6 +332,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == RC_LOGIN_FOR_ACHIEVEMENT) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(intent);
             if (result.isSuccess()) {
+                isSignedGameService = true;
                 Games.getAchievementsClient(this, GoogleSignIn.getLastSignedInAccount(this))
                         .getAchievementsIntent()
                         .addOnSuccessListener(new OnSuccessListener<Intent>() {
@@ -341,6 +349,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == RC_LOGIN_FOR_LEADERBOARD) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(intent);
             if (result.isSuccess()) {
+                isSignedGameService = true;
                 Games.getLeaderboardsClient(this, GoogleSignIn.getLastSignedInAccount(this))
                         .getLeaderboardIntent(leaderboardId)
                         .addOnSuccessListener(new OnSuccessListener<Intent>() {

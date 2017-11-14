@@ -33,13 +33,13 @@ RUN(() => {
 	let purchaseToken;
 	
 	Native.initPurchaseService({
-		error : () => {
+		purchaseError : () => {
 			alert('결제할 수 없습니다. 인터넷 연결을 확인해 주시기 바랍니다.');
 		},
-		cancel : () => {
+		purchaseCancel : () => {
 			alert('결제를 취소하였습니다.');
 		},
-		success : (dataSet) => {
+		purchaseSuccess : (dataSet) => {
 			purchaseToken = dataSet[0].purchaseToken;
 			
 			consumeButton.empty();
@@ -60,6 +60,11 @@ RUN(() => {
 						alert('구매 기록을 가져올 수 없습니다. 인터넷 연결을 확인해 주시기 바랍니다.');
 					},
 					success : (dataSet) => {
+						purchaseToken = dataSet[0].purchaseToken;
+						
+						consumeButton.empty();
+						consumeButton.append('결제 Consume (' + purchaseToken + ')');
+						
 						alert(JSON.stringify(dataSet));
 					}
 				});
@@ -89,6 +94,10 @@ RUN(() => {
 						alert('Consume할 수 없습니다. 인터넷 연결을 확인해 주시기 바랍니다.');
 					},
 					success : (dataSet) => {
+						
+						consumeButton.empty();
+						consumeButton.append('결제 Consume');
+						
 						alert('Consume 완료');
 					}
 				});
@@ -154,7 +163,7 @@ RUN(() => {
 		on : {
 			tap : () => {
 				
-				Native.loginGameService(() => {
+				Native.logoutGameService(() => {
 					alert('로그아웃 성공!');
 				});
 			}
@@ -180,7 +189,7 @@ RUN(() => {
 		on : {
 			tap : () => {
 				
-				Native.unlockAchievement('test_achievement');
+				Native.unlockAchievement('CgkIrs3f_ogNEAIQAg');
 			}
 		}
 	}).appendTo(BODY);
@@ -191,7 +200,7 @@ RUN(() => {
 		on : {
 			tap : () => {
 				
-				Native.incrementAchievement('test_achievement');
+				Native.incrementAchievement('CgkIrs3f_ogNEAIQAg');
 			}
 		}
 	}).appendTo(BODY);
@@ -215,7 +224,7 @@ RUN(() => {
 		on : {
 			tap : () => {
 				
-				Native.updateLeaderboardScore('test_achievement', prompt('점수를 입력해 주십시오.'));
+				Native.updateLeaderboardScore('CgkIrs3f_ogNEAIQAQ', prompt('점수를 입력해 주십시오.'));
 			}
 		}
 	}).appendTo(BODY);
