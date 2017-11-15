@@ -4,9 +4,17 @@ global.Native = OBJECT({
 
 		let callbackCount = 0;
 		let registerCallback = (callback) => {
+			
+			if (callback === undefined) {
+				callback = () => {};
+			}
+			
 			let callbackId = '__CALLBACK_' + callbackCount;
+			
 			global[callbackId] = callback;
+			
 			callbackCount += 1;
+			
 			return callbackId;
 		};
 		
@@ -89,12 +97,17 @@ global.Native = OBJECT({
 		};
 
 		let loginGameService = self.loginGameService = (handlers) => {
-			//REQUIRED: handlers
+			//OPTIONAL: handlers
 			//OPTIONAL: handlers.error
-			//REQUIRED: handlers.success
+			//OPTIONAL: handlers.success
 
-			let errorHandler = handlers.error;
-			let callback = handlers.success;
+			let errorHandler;
+			let callback;
+			
+			if (handlers !== undefined) {
+				errorHandler = handlers.error;
+				callback = handlers.success;
+			}
 			
 			__Native.loginGameService(registerCallback(errorHandler), registerCallback(callback));
 		};
