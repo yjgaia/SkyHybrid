@@ -169,6 +169,8 @@ public class MainActivity extends AppCompatActivity {
 
         // 웹뷰 세팅
         WebSettings webSettings = webView.getSettings();
+        webSettings.setAllowFileAccessFromFileURLs(true);
+        webSettings.setAllowUniversalAccessFromFileURLs(true);
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
 
