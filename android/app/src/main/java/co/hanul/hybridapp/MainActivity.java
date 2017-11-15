@@ -194,9 +194,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @JavascriptInterface
-        public void init(String isDevModeStr, String registerPushKeyHandlerName, String unityAdsGameId) {
-
-            boolean isDevMode = isDevModeStr.equals("true");
+        public void init(boolean isDevMode, String registerPushKeyHandlerName, String unityAdsGameId) {
 
             if (registeredPushKey == null) {
                 registerPushKeyHandler = new JSCallback(webView, registerPushKeyHandlerName);
