@@ -29,7 +29,7 @@ global.Native = OBJECT({
 				registerPushKeyHandler(pushKey);
 			}
 			
-		}), CONFIG.unityAdsGameId);
+		}), INFO.getBrowserName() === 'Safari' ? CONFIG.unityAdsIOSGameId : CONFIG.unityAdsAndroidGameId);
 
 		let setRegisterPushKeyHandler = self.setRegisterPushKeyHandler = (handler) => {
 			//OPTIONAL: handler

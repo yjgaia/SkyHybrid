@@ -2,4 +2,5 @@
 CONFIG.isDevMode = true;
 
 // 유니티 광고 Game Id
-CONFIG.unityAdsGameId = '1604164';
+CONFIG.unityAdsIOSGameId = '1604163';
+CONFIG.unityAdsAndroidGameId = '1604164';
