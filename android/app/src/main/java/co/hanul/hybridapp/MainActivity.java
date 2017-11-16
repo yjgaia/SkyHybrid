@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
@@ -272,11 +273,25 @@ public class MainActivity extends AppCompatActivity {
 
         @JavascriptInterface
         public void showAchievements(String errorHandlerName) {
-            showAchievementsErrorHandler = new JSCallback(webView, errorHandlerName);
 
-            GoogleSignInClient signInClient = GoogleSignIn.getClient(activity, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
-            Intent intent = signInClient.getSignInIntent();
-            activity.startActivityForResult(intent, RC_LOGIN_FOR_ACHIEVEMENT);
+            if (isSignedGameService == true) {
+                Games.getAchievementsClient(activity, GoogleSignIn.getLastSignedInAccount(activity))
+                        .getAchievementsIntent()
+                        .addOnSuccessListener(new OnSuccessListener<Intent>() {
+                            @Override
+                            public void onSuccess(Intent intent) {
+                                startActivityForResult(intent, RC_ACHIEVEMENT_UI);
+                            }
+                        });
+            }
+
+            else {
+                showAchievementsErrorHandler = new JSCallback(webView, errorHandlerName);
+
+                GoogleSignInClient signInClient = GoogleSignIn.getClient(activity, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
+                Intent intent = signInClient.getSignInIntent();
+                activity.startActivityForResult(intent, RC_LOGIN_FOR_ACHIEVEMENT);
+            }
         }
 
         @JavascriptInterface
@@ -295,12 +310,26 @@ public class MainActivity extends AppCompatActivity {
 
         @JavascriptInterface
         public void showLeaderboards(String _leaderboardId, String errorHandlerName) {
-            leaderboardId = _leaderboardId;
-            showLeaderboardsErrorHandler = new JSCallback(webView, errorHandlerName);
 
-            GoogleSignInClient signInClient = GoogleSignIn.getClient(activity, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
-            Intent intent = signInClient.getSignInIntent();
-            activity.startActivityForResult(intent, RC_LOGIN_FOR_LEADERBOARD);
+            if (isSignedGameService == true) {
+                Games.getLeaderboardsClient(activity, GoogleSignIn.getLastSignedInAccount(activity))
+                        .getLeaderboardIntent(_leaderboardId)
+                        .addOnSuccessListener(new OnSuccessListener<Intent>() {
+                            @Override
+                            public void onSuccess(Intent intent) {
+                                startActivityForResult(intent, RC_LEADERBOARD_UI);
+                            }
+                        });
+            }
+
+            else {
+                leaderboardId = _leaderboardId;
+                showLeaderboardsErrorHandler = new JSCallback(webView, errorHandlerName);
+
+                GoogleSignInClient signInClient = GoogleSignIn.getClient(activity, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
+                Intent intent = signInClient.getSignInIntent();
+                activity.startActivityForResult(intent, RC_LOGIN_FOR_LEADERBOARD);
+            }
         }
 
         @JavascriptInterface
