@@ -4,8 +4,8 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "co.hanul.hybridapp"
-        versionCode 11
-        versionName "0.11"
+        versionCode 12
+        versionName "0.12"
         minSdkVersion 23
         targetSdkVersion 26
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

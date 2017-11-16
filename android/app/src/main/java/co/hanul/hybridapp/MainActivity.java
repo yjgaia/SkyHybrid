@@ -346,14 +346,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
 
-        GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(intent);
-        if (result.isSuccess()) {
-            Games.getGamesClient(this, result.getSignInAccount()).setViewForPopups(webView);
-            isSignedGameService = true;
-        }
-
         if (requestCode == RC_LOGIN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(intent);
             if (result.isSuccess()) {
+                Games.getGamesClient(this, result.getSignInAccount()).setViewForPopups(webView);
+                isSignedGameService = true;
+
                 loginGameServiceCallback.call(new JSONObject());
             } else {
                 loginGameServiceErrorHandler.call(new JSONObject());
@@ -361,7 +359,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (requestCode == RC_LOGIN_FOR_ACHIEVEMENT) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(intent);
             if (result.isSuccess()) {
+                Games.getGamesClient(this, result.getSignInAccount()).setViewForPopups(webView);
+                isSignedGameService = true;
+
                 Games.getAchievementsClient(this, GoogleSignIn.getLastSignedInAccount(this))
                         .getAchievementsIntent()
                         .addOnSuccessListener(new OnSuccessListener<Intent>() {
@@ -376,7 +378,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (requestCode == RC_LOGIN_FOR_LEADERBOARD) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(intent);
             if (result.isSuccess()) {
+                Games.getGamesClient(this, result.getSignInAccount()).setViewForPopups(webView);
+                isSignedGameService = true;
+
                 Games.getLeaderboardsClient(this, GoogleSignIn.getLastSignedInAccount(this))
                         .getLeaderboardIntent(leaderboardId)
                         .addOnSuccessListener(new OnSuccessListener<Intent>() {
