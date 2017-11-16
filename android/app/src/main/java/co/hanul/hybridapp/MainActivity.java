@@ -26,6 +26,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
+import com.google.android.gms.games.GamesClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -177,9 +178,6 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setDomStorageEnabled(true);
 
         webView.loadUrl("file:///android_asset/index.html");
-
-        // 구글 게임 서비스 팝업 설정
-        new GoogleApiClient.Builder(this).setViewForPopups(webView).build();
     }
 
     @Override
@@ -348,10 +346,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
 
+        GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(intent);
+        if (result.isSuccess()) {
+            Games.getGamesClient(this, result.getSignInAccount()).setViewForPopups(webView);
+            isSignedGameService = true;
+        }
+
         if (requestCode == RC_LOGIN) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(intent);
             if (result.isSuccess()) {
-                isSignedGameService = true;
                 loginGameServiceCallback.call(new JSONObject());
             } else {
                 loginGameServiceErrorHandler.call(new JSONObject());
@@ -359,9 +361,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (requestCode == RC_LOGIN_FOR_ACHIEVEMENT) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(intent);
             if (result.isSuccess()) {
-                isSignedGameService = true;
                 Games.getAchievementsClient(this, GoogleSignIn.getLastSignedInAccount(this))
                         .getAchievementsIntent()
                         .addOnSuccessListener(new OnSuccessListener<Intent>() {
@@ -376,9 +376,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (requestCode == RC_LOGIN_FOR_LEADERBOARD) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(intent);
             if (result.isSuccess()) {
-                isSignedGameService = true;
                 Games.getLeaderboardsClient(this, GoogleSignIn.getLastSignedInAccount(this))
                         .getLeaderboardIntent(leaderboardId)
                         .addOnSuccessListener(new OnSuccessListener<Intent>() {
