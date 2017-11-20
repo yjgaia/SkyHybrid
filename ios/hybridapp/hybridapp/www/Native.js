@@ -21,7 +21,7 @@ global.Native = OBJECT({
 		let pushKey;
 		let registerPushKeyHandler;
 
-		__Native.init(CONFIG.isDevMode, registerCallback((data) => {
+		/*__Native.init(CONFIG.isDevMode, registerCallback((data) => {
 			
 			pushKey = data.pushKey;
 			
@@ -29,7 +29,7 @@ global.Native = OBJECT({
 				registerPushKeyHandler(pushKey);
 			}
 			
-		}), CONFIG.unityAdsGameId);
+		}), CONFIG.unityAdsGameId);*/
 
 		let setRegisterPushKeyHandler = self.setRegisterPushKeyHandler = (handler) => {
 			//OPTIONAL: handler
