@@ -21,15 +21,23 @@ global.Native = OBJECT({
 		let pushKey;
 		let registerPushKeyHandler;
 
-		/*__Native.init(CONFIG.isDevMode, registerCallback((data) => {
-			
-			pushKey = data.pushKey;
-			
-			if (registerPushKeyHandler !== undefined) {
-				registerPushKeyHandler(pushKey);
-			}
-			
-		}), CONFIG.unityAdsGameId);*/
+		window.webkit.messageHandlers.init.postMessage({
+
+			isDevMode : CONFIG.isDevMode,
+
+			registerPushKeyHandlerName : registerCallback((data) => {
+				
+				pushKey = data.pushKey;
+				
+				if (registerPushKeyHandler !== undefined) {
+					registerPushKeyHandler(pushKey);
+				}
+			}),
+
+			unityAdsGameId : CONFIG.unityAdsGameId,
+
+			productIds : CONFIG.productIds
+		});
 
 		let setRegisterPushKeyHandler = self.setRegisterPushKeyHandler = (handler) => {
 			//OPTIONAL: handler
@@ -46,21 +54,21 @@ global.Native = OBJECT({
 		};
 
 		let removePushKey = self.removePushKey = () => {
-			__Native.removePushKey();
+			window.webkit.messageHandlers.removePushKey.postMessage();
 		};
 
 		let generateNewPushKey = self.generateNewPushKey = () => {
-			__Native.generateNewPushKey();
+			window.webkit.messageHandlers.generateNewPushKey.postMessage();
 		};
 
 		let initPurchaseService = self.initPurchaseService = (loadPurchasedHandler) => {
 			//REQUIRED: loadPurchasedHandler
 			
-			__Native.initPurchaseService(registerCallback(loadPurchasedHandler));
+			window.webkit.messageHandlers.initPurchaseService.postMessage(registerCallback(loadPurchasedHandler));
 		};
 
-		let purchase = self.purchase = (skuId, handlers) => {
-			//REQUIRED: skuId
+		let purchase = self.purchase = (productId, handlers) => {
+			//REQUIRED: productId
 			//REQUIRED: handlers
 			//OPTIONAL: handlers.error
 			//OPTIONAL: handlers.cancel
@@ -70,7 +78,12 @@ global.Native = OBJECT({
 			let cancelHandler = handlers.cancel;
 			let callback = handlers.success;
 
-			__Native.purchase(skuId, registerCallback(errorHandler), registerCallback(cancelHandler), registerCallback(callback));
+			window.webkit.messageHandlers.purchase.postMessage({
+				productId : productId,
+				errorHandlerName : registerCallback(errorHandler),
+				cancelHandlerName : registerCallback(cancelHandler),
+				callbackName : registerCallback(callback)
+			});
 		};
 		
 		let consumePurchase = self.consumePurchase = (purchaseToken, handlers) => {
@@ -82,7 +95,11 @@ global.Native = OBJECT({
 			let errorHandler = handlers.error;
 			let callback = handlers.success;
 
-			__Native.consumePurchase(purchaseToken, registerCallback(errorHandler), registerCallback(callback));
+			window.webkit.messageHandlers.consumePurchase.postMessage({
+				purchaseToken : purchaseToken,
+				errorHandlerName : registerCallback(errorHandler),
+				callbackName : registerCallback(callback)
+			});
 		};
 
 		let showUnityAd = self.showUnityAd = (handlers) => {
@@ -93,61 +110,10 @@ global.Native = OBJECT({
 			let errorHandler = handlers.error;
 			let callback = handlers.success;
 			
-			__Native.showUnityAd(registerCallback(errorHandler), registerCallback(callback));
-		};
-
-		let loginGameService = self.loginGameService = (handlers) => {
-			//OPTIONAL: handlers
-			//OPTIONAL: handlers.error
-			//OPTIONAL: handlers.success
-
-			let errorHandler;
-			let callback;
-			
-			if (handlers !== undefined) {
-				errorHandler = handlers.error;
-				callback = handlers.success;
-			}
-			
-			__Native.loginGameService(registerCallback(errorHandler), registerCallback(callback));
-		};
-		
-		let logoutGameService = self.logoutGameService = (callback) => {
-			//REQUIRED: callback
-			
-			__Native.logoutGameService(registerCallback(callback));
-		};
-		
-		let showAchievements = self.showAchievements = (errorHandler) => {
-			//REQUIRED: errorHandler
-			
-			__Native.showAchievements(registerCallback(errorHandler));
-		};
-		
-		let unlockAchievement = self.unlockAchievement = (achievementId) => {
-			//REQUIRED: achievementId
-			
-			__Native.unlockAchievement(achievementId);
-		};
-		
-		let incrementAchievement = self.incrementAchievement = (achievementId) => {
-			//REQUIRED: achievementId
-			
-			__Native.incrementAchievement(achievementId);
-		};
-		
-		let showLeaderboards = self.showLeaderboards = (leaderboardId, errorHandler) => {
-			//REQUIRED: leaderboardId
-			//REQUIRED: errorHandler
-			
-			__Native.showLeaderboards(leaderboardId, registerCallback(errorHandler));
-		};
-		
-		let updateLeaderboardScore = self.updateLeaderboardScore = (leaderboardId, score) => {
-			//REQUIRED: leaderboardId
-			//REQUIRED: score
-			
-			__Native.updateLeaderboardScore(leaderboardId, score);
+			window.webkit.messageHandlers.showUnityAd.postMessage({
+				errorHandlerName : registerCallback(errorHandler),
+				callbackName : registerCallback(callback)
+			});
 		};
 	}
 });

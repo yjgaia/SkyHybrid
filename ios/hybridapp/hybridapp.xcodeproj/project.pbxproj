@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		39735DC31FC46B3F00F16C9B /* UnityAds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39735DC21FC46B3F00F16C9B /* UnityAds.framework */; };
 		398BA6DE1FC3478100068823 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398BA6DD1FC3478100068823 /* AppDelegate.swift */; };
 		398BA6E01FC3478100068823 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398BA6DF1FC3478100068823 /* ViewController.swift */; };
 		398BA6E31FC3478100068823 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 398BA6E11FC3478100068823 /* Main.storyboard */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		39735DC21FC46B3F00F16C9B /* UnityAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = UnityAds.framework; sourceTree = "<group>"; };
 		398BA6DA1FC3478100068823 /* hybridapp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = hybridapp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		398BA6DD1FC3478100068823 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		398BA6DF1FC3478100068823 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -31,6 +33,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39735DC31FC46B3F00F16C9B /* UnityAds.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,6 +59,7 @@
 		398BA6DC1FC3478100068823 /* hybridapp */ = {
 			isa = PBXGroup;
 			children = (
+				39735DC21FC46B3F00F16C9B /* UnityAds.framework */,
 				398BA6DD1FC3478100068823 /* AppDelegate.swift */,
 				398BA6DF1FC3478100068823 /* ViewController.swift */,
 				398BA6E11FC3478100068823 /* Main.storyboard */,
@@ -280,6 +284,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Z6AV4BT9ZT;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/hybridapp",
+				);
 				INFOPLIST_FILE = hybridapp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = co.hanul.hybridapp;
@@ -295,6 +303,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Z6AV4BT9ZT;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/hybridapp",
+				);
 				INFOPLIST_FILE = hybridapp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = co.hanul.hybridapp;
