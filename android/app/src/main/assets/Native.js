@@ -59,8 +59,8 @@ global.Native = OBJECT({
 			__Native.initPurchaseService(registerCallback(loadPurchasedHandler));
 		};
 
-		let purchase = self.purchase = (skuId, handlers) => {
-			//REQUIRED: skuId
+		let purchase = self.purchase = (productId, handlers) => {
+			//REQUIRED: productId
 			//REQUIRED: handlers
 			//OPTIONAL: handlers.error
 			//OPTIONAL: handlers.cancel
@@ -70,7 +70,7 @@ global.Native = OBJECT({
 			let cancelHandler = handlers.cancel;
 			let callback = handlers.success;
 
-			__Native.purchase(skuId, registerCallback(errorHandler), registerCallback(cancelHandler), registerCallback(callback));
+			__Native.purchase(productId, registerCallback(errorHandler), registerCallback(cancelHandler), registerCallback(callback));
 		};
 		
 		let consumePurchase = self.consumePurchase = (purchaseToken, handlers) => {

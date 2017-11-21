@@ -238,8 +238,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @JavascriptInterface
-        public void purchase(String skuId, String errorHandlerName, String cancelHandlerName, String callbackName) {
-            billingController.purchase(skuId, new JSCallback(webView, errorHandlerName), new JSCallback(webView, cancelHandlerName), new JSCallback(webView, callbackName));
+        public void purchase(String productId, String errorHandlerName, String cancelHandlerName, String callbackName) {
+            billingController.purchase(productId, new JSCallback(webView, errorHandlerName), new JSCallback(webView, cancelHandlerName), new JSCallback(webView, callbackName));
         }
 
         @JavascriptInterface
