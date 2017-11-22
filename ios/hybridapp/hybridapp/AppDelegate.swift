@@ -1,22 +1,22 @@
-//
-//  AppDelegate.swift
-//  hybridapp
-//
-//  Created by YJ on 2017. 11. 21..
-//  Copyright © 2017년 YJ. All rights reserved.
-//
-
 import UIKit
+import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
-
+    var viewController: ViewController!
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        UNUserNotificationCenter.current().requestAuthorization(options:[.badge, .alert, .sound]) { (granted, error) in }
+        application.registerForRemoteNotifications()
+        
         return true
+    }
+    
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        viewController.registerPushKey(deviceToken.reduce("", {$0 + String(format: "%02X", $1)}));
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

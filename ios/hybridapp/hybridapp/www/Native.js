@@ -25,9 +25,9 @@ global.Native = OBJECT({
 
 			isDevMode : CONFIG.isDevMode,
 
-			registerPushKeyHandlerName : registerCallback((data) => {
+			registerPushKeyHandlerName : registerCallback((_pushKey) => {
 				
-				pushKey = data.pushKey;
+				pushKey = _pushKey;
 				
 				if (registerPushKeyHandler !== undefined) {
 					registerPushKeyHandler(pushKey);
@@ -52,15 +52,7 @@ global.Native = OBJECT({
 				registerPushKeyHandler = handler;
 			}
 		};
-
-		let removePushKey = self.removePushKey = () => {
-			window.webkit.messageHandlers.removePushKey.postMessage();
-		};
-
-		let generateNewPushKey = self.generateNewPushKey = () => {
-			window.webkit.messageHandlers.generateNewPushKey.postMessage();
-		};
-
+		
 		let initPurchaseService = self.initPurchaseService = (loadPurchasedHandler) => {
 			//REQUIRED: loadPurchasedHandler
 			

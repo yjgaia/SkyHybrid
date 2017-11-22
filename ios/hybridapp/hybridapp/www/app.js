@@ -1,11 +1,11 @@
 RUN(() => {
 	INIT_OBJECTS();
 	
-	/*Native.setRegisterPushKeyHandler((pushKey) => {
+	Native.setRegisterPushKeyHandler((pushKey) => {
 		alert('푸시 키 : ' + pushKey);
 		
 		POST({
-			url : 'http://192.168.0.7:8112/save-android-push-key',
+			url : 'http://192.168.0.9:8112/save-ios-push-key',
 			params : {
 				pushKey : pushKey
 			}
@@ -17,7 +17,7 @@ RUN(() => {
 				alert('푸시 키 서버 저장 완료: ' + result);
 			}
 		});
-	});*/
+	});
 	
 	let buttonStyle = {
 		display : 'block',
@@ -92,17 +92,6 @@ RUN(() => {
 						alert('Consume 완료');
 					}
 				});
-			}
-		}
-	}).appendTo(BODY);
-	
-	A({
-		style : buttonStyle,
-		c : '푸시 키 재생성',
-		on : {
-			tap : () => {
-				Native.removePushKey();
-				Native.generateNewPushKey();
 			}
 		}
 	}).appendTo(BODY);
