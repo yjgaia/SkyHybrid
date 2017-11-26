@@ -19,7 +19,7 @@ BOOT({
 			IOS : {
 				certFilePath : 'cert.pem',
 				keyFilePath : 'key.pem',
-				password : '{{비밀번호}}'
+				password : 'ekfrrhrl'
 			}
 		}
 	}

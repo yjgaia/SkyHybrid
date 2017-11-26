@@ -78,8 +78,8 @@ global.Native = OBJECT({
 			});
 		};
 		
-		let consumePurchase = self.consumePurchase = (purchaseToken, handlers) => {
-			//REQUIRED: purchaseToken
+		let consumePurchase = self.consumePurchase = (productId, handlers) => {
+			//REQUIRED: productId
 			//REQUIRED: handlers
 			//OPTIONAL: handlers.error
 			//REQUIRED: handlers.success
@@ -88,7 +88,7 @@ global.Native = OBJECT({
 			let callback = handlers.success;
 
 			window.webkit.messageHandlers.consumePurchase.postMessage({
-				purchaseToken : purchaseToken,
+				productId : productId,
 				errorHandlerName : registerCallback(errorHandler),
 				callbackName : registerCallback(callback)
 			});

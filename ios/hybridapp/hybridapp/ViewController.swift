@@ -5,7 +5,7 @@ import UnityAds
 
 class ViewController: UIViewController,
     WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler,
-    SKProductsRequestDelegate,
+    SKProductsRequestDelegate, SKPaymentTransactionObserver,
     UnityAdsDelegate {
     
     var webView: WKWebView!
@@ -13,6 +13,12 @@ class ViewController: UIViewController,
     var products: [SKProduct]!
     
     var showUnityAdsCallbackName: String!
+    
+    var purchasedTransactions: [String:SKPaymentTransaction] = [:]
+    
+    var loadPurchasedHandlerName: String!
+    var purchaseCancelHandlerName: String!
+    var purchaseCallbackName: String!
     
     var registeredPushKey: String!
     var registerPushKeyHandlerName: String!
@@ -117,6 +123,9 @@ class ViewController: UIViewController,
         
         if (message.name == "initPurchaseService") {
             
+            loadPurchasedHandlerName = message.body as! String
+            
+            SKPaymentQueue.default().add(self)
         }
         
         if (message.name == "purchase") {
@@ -124,11 +133,15 @@ class ViewController: UIViewController,
             
             let productId = data["productId"] as! String
             let errorHandlerName = data["errorHandlerName"] as! String
-            let cancelHandlerName = data["cancelHandlerName"] as! String
-            let callbackName = data["callbackName"] as! String
+            
+            purchaseCancelHandlerName = data["cancelHandlerName"] as! String
+            purchaseCallbackName = data["callbackName"] as! String
+            
+            // 초기화가 아니므로 삭제
+            loadPurchasedHandlerName = nil
             
             if (products == nil) {
-                //TOOD:
+                webView.evaluateJavaScript(errorHandlerName + "()")
             } else {
                 for product in products {
                     if product.productIdentifier == productId {
@@ -139,7 +152,26 @@ class ViewController: UIViewController,
         }
         
         if (message.name == "consumePurchase") {
+            let data = message.body as! [String:AnyObject]
             
+            let productId = data["productId"] as? String
+            let errorHandlerName = data["errorHandlerName"] as! String
+            let callbackName = data["callbackName"] as! String
+            
+            if (productId == nil) {
+                webView.evaluateJavaScript(errorHandlerName + "()")
+            }
+            
+            else {
+                let purchasedTransaction = purchasedTransactions[productId!]
+                if (purchasedTransaction == nil) {
+                    webView.evaluateJavaScript(errorHandlerName + "()")
+                } else {
+                    SKPaymentQueue.default().finishTransaction(purchasedTransaction!)
+                    purchasedTransactions.removeValue(forKey: productId!)
+                    webView.evaluateJavaScript(callbackName + "()")
+                }
+            }
         }
         
         if (message.name == "showUnityAd") {
@@ -175,12 +207,70 @@ class ViewController: UIViewController,
         if (registerPushKeyHandlerName == nil) {
             registeredPushKey = pushKey
         } else {
-            webView.evaluateJavaScript(registerPushKeyHandlerName + "(" + pushKey + ")")
+            webView.evaluateJavaScript(registerPushKeyHandlerName + "('" + pushKey + "')")
         }
     }
     
     func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
         products = response.products;
+    }
+    
+    func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
+        
+        var receipt: String = "undefined"
+        do {
+            receipt = "'" + (try Data(contentsOf: Bundle.main.appStoreReceiptURL!).base64EncodedString()) + "'"
+        } catch {
+            // ignore.
+        }
+        
+        var purchasedInfoStr = ""
+        
+        for transaction in transactions {
+            switch transaction.transactionState {
+            
+            case .purchased:
+                
+                let productId = transaction.payment.productIdentifier
+                
+                purchasedTransactions[productId] = transaction
+                
+                if (purchaseCallbackName != nil) {
+                    webView.evaluateJavaScript(purchaseCallbackName + "({productId:'" + productId + "',receipt:" + receipt + "})")
+                    purchaseCallbackName = nil
+                }
+                
+                else {
+                    if (purchasedInfoStr != "") {
+                        purchasedInfoStr += ","
+                    }
+                    purchasedInfoStr += "{productId:'" + productId + "',receipt:" + receipt + "}"
+                }
+                
+                break
+            
+            case .failed:
+            
+                if (purchaseCancelHandlerName != nil) {
+                    webView.evaluateJavaScript(purchaseCancelHandlerName + "()")
+                    purchaseCancelHandlerName = nil
+                }
+                
+                SKPaymentQueue.default().finishTransaction(transaction)
+                
+                break
+            
+            default:
+                break
+            }
+        }
+        
+        if (loadPurchasedHandlerName != nil) {
+            if (purchasedInfoStr != "") {
+                webView.evaluateJavaScript(loadPurchasedHandlerName + "([" + purchasedInfoStr + "])")
+            }
+            loadPurchasedHandlerName = nil
+        }
     }
     
     func unityAdsReady(_ placementId: String) { }
