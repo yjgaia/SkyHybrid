@@ -45,14 +45,6 @@ global.Native = OBJECT({
 			}
 		};
 
-		let removePushKey = self.removePushKey = () => {
-			__Native.removePushKey();
-		};
-
-		let generateNewPushKey = self.generateNewPushKey = () => {
-			__Native.generateNewPushKey();
-		};
-
 		let initPurchaseService = self.initPurchaseService = (loadPurchasedHandler) => {
 			//REQUIRED: loadPurchasedHandler
 			
@@ -73,8 +65,8 @@ global.Native = OBJECT({
 			__Native.purchase(productId, registerCallback(errorHandler), registerCallback(cancelHandler), registerCallback(callback));
 		};
 		
-		let consumePurchase = self.consumePurchase = (purchaseToken, handlers) => {
-			//REQUIRED: purchaseToken
+		let consumePurchase = self.consumePurchase = (productId, handlers) => {
+			//REQUIRED: productId
 			//REQUIRED: handlers
 			//OPTIONAL: handlers.error
 			//REQUIRED: handlers.success
@@ -82,7 +74,7 @@ global.Native = OBJECT({
 			let errorHandler = handlers.error;
 			let callback = handlers.success;
 
-			__Native.consumePurchase(purchaseToken, registerCallback(errorHandler), registerCallback(callback));
+			__Native.consumePurchase(productId, registerCallback(errorHandler), registerCallback(callback));
 		};
 
 		let showUnityAd = self.showUnityAd = (handlers) => {

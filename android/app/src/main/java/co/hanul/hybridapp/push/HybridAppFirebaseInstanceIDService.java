@@ -17,7 +17,7 @@ public class HybridAppFirebaseInstanceIDService extends FirebaseInstanceIdServic
             MainActivity.registeredPushKey = FirebaseInstanceId.getInstance().getToken();
         }
 
-        else {
+        else if (MainActivity.registerPushKeyHandler != null) {
 
             JSONObject data = new JSONObject();
             try {
@@ -27,6 +27,7 @@ public class HybridAppFirebaseInstanceIDService extends FirebaseInstanceIdServic
             }
 
             MainActivity.registerPushKeyHandler.call(data);
+            MainActivity.registerPushKeyHandler = null;
         }
     }
 }

@@ -11,17 +11,26 @@ PushTestServer.MAIN = METHOD({
 			
 			if (uri === 'save-android-push-key') {
 				
-				pushKeyDB.create({
-					androidKey : params.pushKey
-				}, (savedData) => {
-					
-					response({
-						content : JSON.stringify(savedData),
-						contentType : 'application/json',
-						headers : {
-							'Access-Control-Allow-Origin' : '*'
-						}
-					});
+				pushKeyDB.checkExists({
+					filter : {
+						androidKey : params.pushKey
+					}
+				}, (exists) => {
+					if (exists !== true) {
+						
+						pushKeyDB.create({
+							androidKey : params.pushKey
+						}, (savedData) => {
+							
+							response({
+								content : JSON.stringify(savedData),
+								contentType : 'application/json',
+								headers : {
+									'Access-Control-Allow-Origin' : '*'
+								}
+							});
+						});
+					}
 				});
 				
 				return false;
@@ -29,17 +38,26 @@ PushTestServer.MAIN = METHOD({
 
 			if (uri === 'save-ios-push-key') {
 				
-				pushKeyDB.create({
-					iosKey : params.pushKey
-				}, (savedData) => {
-					
-					response({
-						content : JSON.stringify(savedData),
-						contentType : 'application/json',
-						headers : {
-							'Access-Control-Allow-Origin' : '*'
-						}
-					});
+				pushKeyDB.checkExists({
+					filter : {
+						iosKey : params.pushKey
+					}
+				}, (exists) => {
+					if (exists !== true) {
+						
+						pushKeyDB.create({
+							iosKey : params.pushKey
+						}, (savedData) => {
+							
+							response({
+								content : JSON.stringify(savedData),
+								contentType : 'application/json',
+								headers : {
+									'Access-Control-Allow-Origin' : '*'
+								}
+							});
+						});
+					}
 				});
 				
 				return false;
