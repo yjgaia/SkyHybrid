@@ -197,10 +197,9 @@ class ViewController: UIViewController,
         UIApplication.shared.isIdleTimerDisabled = true
         
         // index.html 로딩
-        let baseURL = Bundle.main.url(forResource: "www", withExtension: nil)!
-        let indexURL = baseURL.appendingPathComponent("index.html")
-        let htmlString = try? String(contentsOf: indexURL, encoding: String.Encoding.utf8)
-        webView.loadHTMLString(htmlString!, baseURL: baseURL)
+        if let path = Bundle.main.path(forResource: "index", ofType: "html", inDirectory: "www") {
+            webView.load(URLRequest(url: URL(fileURLWithPath: path)))
+        }
     }
     
     func registerPushKey(_ pushKey: String) {

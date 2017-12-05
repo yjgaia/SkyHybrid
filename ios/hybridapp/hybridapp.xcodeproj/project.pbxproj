@@ -13,7 +13,6 @@
 		398BA6E01FC3478100068823 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398BA6DF1FC3478100068823 /* ViewController.swift */; };
 		398BA6E31FC3478100068823 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 398BA6E11FC3478100068823 /* Main.storyboard */; };
 		398BA6E51FC3478100068823 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 398BA6E41FC3478100068823 /* Assets.xcassets */; };
-		398BA6E81FC3478100068823 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 398BA6E61FC3478100068823 /* LaunchScreen.storyboard */; };
 		398BA6F11FC3555500068823 /* www in Resources */ = {isa = PBXBuildFile; fileRef = 398BA6F01FC3555500068823 /* www */; };
 /* End PBXBuildFile section */
 
@@ -26,7 +25,6 @@
 		398BA6DF1FC3478100068823 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		398BA6E21FC3478100068823 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		398BA6E41FC3478100068823 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		398BA6E71FC3478100068823 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		398BA6E91FC3478100068823 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		398BA6F01FC3555500068823 /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; path = www; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -78,7 +76,6 @@
 				398BA6DF1FC3478100068823 /* ViewController.swift */,
 				398BA6E11FC3478100068823 /* Main.storyboard */,
 				398BA6E41FC3478100068823 /* Assets.xcassets */,
-				398BA6E61FC3478100068823 /* LaunchScreen.storyboard */,
 				398BA6E91FC3478100068823 /* Info.plist */,
 				398BA6F01FC3555500068823 /* www */,
 			);
@@ -153,7 +150,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				398BA6F11FC3555500068823 /* www in Resources */,
-				398BA6E81FC3478100068823 /* LaunchScreen.storyboard in Resources */,
 				398BA6E51FC3478100068823 /* Assets.xcassets in Resources */,
 				398BA6E31FC3478100068823 /* Main.storyboard in Resources */,
 			);
@@ -180,14 +176,6 @@
 				398BA6E21FC3478100068823 /* Base */,
 			);
 			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		398BA6E61FC3478100068823 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				398BA6E71FC3478100068823 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -304,7 +292,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = hybridapp/hybridapp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Z6AV4BT9ZT;
@@ -325,7 +312,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = hybridapp/hybridapp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Z6AV4BT9ZT;
