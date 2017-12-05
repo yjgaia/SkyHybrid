@@ -43,6 +43,7 @@ class ViewController: UIViewController,
         webViewContentController.add(self, name: "showUnityAd")
         
         webView = WKWebView(frame: .zero, configuration: webViewConfig)
+        webView.isOpaque = false
         webView.uiDelegate = self
         webView.navigationDelegate = self
         view = webView
