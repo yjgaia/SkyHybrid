@@ -30,19 +30,19 @@ RUN(() => {
 		marginBottom : 10
 	};
 	
-	let purchaseToken;
+	let productId;
 	
-	/*Native.initPurchaseService((dataSet) => {
+	Native.initPurchaseService((dataSet) => {
 		
 		if (dataSet.length > 0) {
-			purchaseToken = dataSet[0].purchaseToken;
+			productId = dataSet[0].productId;
 			
 			consumeButton.empty();
-			consumeButton.append('결제 Consume (' + purchaseToken + ')');
+			consumeButton.append('결제 Consume (' + productId + ')');
 		}
 		
 		alert('Consume 되지 않은 결제 기록: ' + JSON.stringify(dataSet));
-	});*/
+	});
 	
 	A({
 		style : buttonStyle,
@@ -62,10 +62,10 @@ RUN(() => {
 						}));
 					},
 					success : (data) => {
-						purchaseToken = data.purchaseToken;
+						productId = data.productId;
 						
 						consumeButton.empty();
-						consumeButton.append('결제 Consume (' + purchaseToken + ')');
+						consumeButton.append('결제 Consume (' + productId + ')');
 						
 						alert('결제 완료: ' + JSON.stringify(data));
 					}
@@ -80,7 +80,7 @@ RUN(() => {
 		on : {
 			tap : () => {
 				
-				Native.consumePurchase(purchaseToken, {
+				Native.consumePurchase(productId, {
 					error : () => {
 						alert('Consume할 수 없습니다. 인터넷 연결을 확인해 주시기 바랍니다.');
 					},
@@ -90,6 +90,8 @@ RUN(() => {
 						consumeButton.append('결제 Consume');
 						
 						alert('Consume 완료');
+
+						productId = undefined;
 					}
 				});
 			}

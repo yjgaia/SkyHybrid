@@ -1,5 +1,9 @@
 # Hybrid App - iOS
 
-## 설정 파일
+## 국제화 처리
+* `File - New - File - Strings File`로 InfoPlist 파일을 생성합니다.
 
-## 확장 모듈 만들기
+## Hybrid App 업데이트 하기
+Hybrid App 프로젝트가 업데이트 된 경우 다음 파일들을 복사합니다.
+* `hybridapp/hybridapp/AppDelegate.swift`
+* `hybridapp/hybridapp/ViewController.swift`

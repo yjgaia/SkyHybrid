@@ -20,7 +20,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import co.hanul.hybridapp.JSCallback;
 
@@ -35,6 +37,8 @@ public class BillingController {
     private JSCallback purchaseErrorHandler;
     private JSCallback purchaseCancelHandler;
     private JSCallback purchaseSuccessHandler;
+
+    private Map<String, String> purchaseTokenMap = new HashMap<>();
 
     private void executeServiceRequest(Runnable runnable) {
 
@@ -51,6 +55,9 @@ public class BillingController {
 
                     JSONArray dataSet = new JSONArray();
                     for (Purchase purchase : billingClient.queryPurchases(BillingClient.SkuType.INAPP).getPurchasesList()) {
+
+                        purchaseTokenMap.put(purchase.getSku(), purchase.getPurchaseToken());
+
                         JSONObject data = new JSONObject();
                         try {
                             data.put("productId", purchase.getSku());
@@ -61,7 +68,9 @@ public class BillingController {
                         dataSet.put(data);
                     }
 
-                    loadPurchasedHandler.callDataSet(dataSet);
+                    if (dataSet.length() > 0) {
+                        loadPurchasedHandler.callDataSet(dataSet);
+                    }
                 }
 
                 @Override
@@ -84,6 +93,9 @@ public class BillingController {
 
                     JSONObject data = new JSONObject();
                     for (Purchase purchase : purchases) {
+
+                        purchaseTokenMap.put(purchase.getSku(), purchase.getPurchaseToken());
+
                         try {
                             data.put("productId", purchase.getSku());
                             data.put("purchaseToken", purchase.getPurchaseToken());
@@ -127,15 +139,16 @@ public class BillingController {
         });
     }
 
-    public void consumePurchase(final String purchaseToken, final JSCallback errorHandler, final JSCallback callback) {
+    public void consumePurchase(final String productId, final JSCallback errorHandler, final JSCallback callback) {
         executeServiceRequest(new Runnable() {
             @Override
             public void run() {
 
-                billingClient.consumeAsync(purchaseToken, new ConsumeResponseListener() {
+                billingClient.consumeAsync(purchaseTokenMap.get(productId), new ConsumeResponseListener() {
                     @Override
                     public void onConsumeResponse(int responseCode, String purchaseToken) {
                         if (responseCode == BillingClient.BillingResponse.OK) {
+                            purchaseTokenMap.remove(productId);
                             callback.call(new JSONObject());
                         } else {
                             errorHandler.call(new JSONObject());

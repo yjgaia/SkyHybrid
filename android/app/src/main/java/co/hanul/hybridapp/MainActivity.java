@@ -178,6 +178,10 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setDomStorageEnabled(true);
 
         webView.loadUrl("file:///android_asset/index.html");
+
+        if (registeredPushKey == null) {
+            registeredPushKey = FirebaseInstanceId.getInstance().getToken();
+        }
     }
 
     @Override
@@ -219,20 +223,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @JavascriptInterface
-        public void removePushKey() {
-            try {
-                FirebaseInstanceId.getInstance().deleteInstanceId();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        @JavascriptInterface
-        public void generateNewPushKey() {
-            FirebaseInstanceId.getInstance().getToken();
-        }
-
-        @JavascriptInterface
         public void initPurchaseService(String loadPurchasedHandlerName) {
             billingController = new BillingController(activity, new JSCallback(webView, loadPurchasedHandlerName));
         }
@@ -243,8 +233,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @JavascriptInterface
-        public void consumePurchase(String purchaseToken, String errorHandlerName, String callbackName) {
-            billingController.consumePurchase(purchaseToken, new JSCallback(webView, errorHandlerName), new JSCallback(webView, callbackName));
+        public void consumePurchase(String productId, String errorHandlerName, String callbackName) {
+            billingController.consumePurchase(productId, new JSCallback(webView, errorHandlerName), new JSCallback(webView, callbackName));
         }
 
         @JavascriptInterface

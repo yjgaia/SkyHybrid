@@ -11,7 +11,10 @@
 * `app/res/values/strings.xml` 파일 내용을 수정합니다. `app_id`는 구글 게임 서비스에서의 ID입니다.
 * `app/assets/config.js` 파일을 수정합니다.
 
-## 업데이트 하기
+## 국제화 처리
+* `app/res/values-ko`와 같이 국가에 따른 폴더를 생성합니다.
+
+## Hybrid App 업데이트 하기
 Hybrid App 프로젝트가 업데이트 된 경우 다음 파일들을 복사합니다.
 * `app/src/main/assets/java/co/hanul/hybridapp` 폴더 중 `Settings.java`를 제외한 전체
 * `app/src/main/assets/Native.js`
