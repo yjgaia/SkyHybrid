@@ -27,6 +27,7 @@ class ViewController: UIViewController,
         let webViewConfig = WKWebViewConfiguration()
         let webViewContentController = WKUserContentController()
         webViewConfig.userContentController = webViewContentController
+        webViewConfig.mediaTypesRequiringUserActionForPlayback = []
         
         webViewContentController.add(self, name: "init")
         
