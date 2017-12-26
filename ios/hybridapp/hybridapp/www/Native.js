@@ -34,7 +34,7 @@ global.Native = OBJECT({
 				}
 			}),
 
-			unityAdsGameId : CONFIG.unityAdsGameId,
+			unityAdsGameId : INFO.getBrowserName() === 'Safari' ? CONFIG.unityAdsIOSGameId : CONFIG.unityAdsAndroidGameId,
 
 			productIds : CONFIG.productIds
 		});
@@ -59,16 +59,24 @@ global.Native = OBJECT({
 			window.webkit.messageHandlers.initPurchaseService.postMessage(registerCallback(loadPurchasedHandler));
 		};
 
-		let purchase = self.purchase = (productId, handlers) => {
+		let purchase = self.purchase = (productId, callbackOrHandlers) => {
 			//REQUIRED: productId
-			//REQUIRED: handlers
-			//OPTIONAL: handlers.error
-			//OPTIONAL: handlers.cancel
-			//REQUIRED: handlers.success
+			//REQUIRED: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.error
+			//OPTIONAL: callbackOrHandlers.cancel
+			//REQUIRED: callbackOrHandlers.success
 
-			let errorHandler = handlers.error;
-			let cancelHandler = handlers.cancel;
-			let callback = handlers.success;
+			let errorHandler;
+			let cancelHandler;
+			let callback;
+			
+			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+				callback = callbackOrHandlers;
+			} else {
+				errorHandler = callbackOrHandlers.error;
+				cancelHandler = callbackOrHandlers.cancel;
+				callback = callbackOrHandlers.success;
+			}
 
 			window.webkit.messageHandlers.purchase.postMessage({
 				productId : productId,
@@ -78,14 +86,21 @@ global.Native = OBJECT({
 			});
 		};
 		
-		let consumePurchase = self.consumePurchase = (productId, handlers) => {
+		let consumePurchase = self.consumePurchase = (productId, callbackOrHandlers) => {
 			//REQUIRED: productId
-			//REQUIRED: handlers
-			//OPTIONAL: handlers.error
-			//REQUIRED: handlers.success
+			//REQUIRED: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.error
+			//REQUIRED: callbackOrHandlers.success
 
-			let errorHandler = handlers.error;
-			let callback = handlers.success;
+			let errorHandler;
+			let callback;
+			
+			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+				callback = callbackOrHandlers;
+			} else {
+				errorHandler = callbackOrHandlers.error;
+				callback = callbackOrHandlers.success;
+			}
 
 			window.webkit.messageHandlers.consumePurchase.postMessage({
 				productId : productId,
@@ -94,13 +109,20 @@ global.Native = OBJECT({
 			});
 		};
 
-		let showUnityAd = self.showUnityAd = (handlers) => {
-			//REQUIRED: handlers
-			//OPTIONAL: handlers.error
-			//REQUIRED: handlers.success
+		let showUnityAd = self.showUnityAd = (callbackOrHandlers) => {
+			//REQUIRED: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.error
+			//REQUIRED: callbackOrHandlers.success
 
-			let errorHandler = handlers.error;
-			let callback = handlers.success;
+			let errorHandler;
+			let callback;
+			
+			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+				callback = callbackOrHandlers;
+			} else {
+				errorHandler = callbackOrHandlers.error;
+				callback = callbackOrHandlers.success;
+			}
 			
 			window.webkit.messageHandlers.showUnityAd.postMessage({
 				errorHandlerName : registerCallback(errorHandler),

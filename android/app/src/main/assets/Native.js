@@ -20,7 +20,7 @@ global.Native = OBJECT({
 		
 		let pushKey;
 		let registerPushKeyHandler;
-
+		
 		__Native.init(CONFIG.isDevMode, registerCallback((data) => {
 			
 			pushKey = data.pushKey;
@@ -29,7 +29,7 @@ global.Native = OBJECT({
 				registerPushKeyHandler(pushKey);
 			}
 			
-		}), CONFIG.unityAdsGameId);
+		}), INFO.getBrowserName() === 'Safari' ? CONFIG.unityAdsIOSGameId : CONFIG.unityAdsAndroidGameId);
 
 		let setRegisterPushKeyHandler = self.setRegisterPushKeyHandler = (handler) => {
 			//OPTIONAL: handler
@@ -51,54 +51,78 @@ global.Native = OBJECT({
 			__Native.initPurchaseService(registerCallback(loadPurchasedHandler));
 		};
 
-		let purchase = self.purchase = (productId, handlers) => {
+		let purchase = self.purchase = (productId, callbackOrHandlers) => {
 			//REQUIRED: productId
-			//REQUIRED: handlers
-			//OPTIONAL: handlers.error
-			//OPTIONAL: handlers.cancel
-			//REQUIRED: handlers.success
+			//REQUIRED: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.error
+			//OPTIONAL: callbackOrHandlers.cancel
+			//REQUIRED: callbackOrHandlers.success
 
-			let errorHandler = handlers.error;
-			let cancelHandler = handlers.cancel;
-			let callback = handlers.success;
+			let errorHandler;
+			let cancelHandler;
+			let callback;
+			
+			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+				callback = callbackOrHandlers;
+			} else {
+				errorHandler = callbackOrHandlers.error;
+				cancelHandler = callbackOrHandlers.cancel;
+				callback = callbackOrHandlers.success;
+			}
 
 			__Native.purchase(productId, registerCallback(errorHandler), registerCallback(cancelHandler), registerCallback(callback));
 		};
 		
-		let consumePurchase = self.consumePurchase = (productId, handlers) => {
+		let consumePurchase = self.consumePurchase = (productId, callbackOrHandlers) => {
 			//REQUIRED: productId
-			//REQUIRED: handlers
-			//OPTIONAL: handlers.error
-			//REQUIRED: handlers.success
-
-			let errorHandler = handlers.error;
-			let callback = handlers.success;
-
-			__Native.consumePurchase(productId, registerCallback(errorHandler), registerCallback(callback));
-		};
-
-		let showUnityAd = self.showUnityAd = (handlers) => {
-			//REQUIRED: handlers
-			//OPTIONAL: handlers.error
-			//REQUIRED: handlers.success
-
-			let errorHandler = handlers.error;
-			let callback = handlers.success;
-			
-			__Native.showUnityAd(registerCallback(errorHandler), registerCallback(callback));
-		};
-
-		let loginGameService = self.loginGameService = (handlers) => {
-			//OPTIONAL: handlers
-			//OPTIONAL: handlers.error
-			//OPTIONAL: handlers.success
+			//REQUIRED: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.error
+			//REQUIRED: callbackOrHandlers.success
 
 			let errorHandler;
 			let callback;
 			
-			if (handlers !== undefined) {
-				errorHandler = handlers.error;
-				callback = handlers.success;
+			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+				callback = callbackOrHandlers;
+			} else {
+				errorHandler = callbackOrHandlers.error;
+				callback = callbackOrHandlers.success;
+			}
+
+			__Native.consumePurchase(productId, registerCallback(errorHandler), registerCallback(callback));
+		};
+
+		let showUnityAd = self.showUnityAd = (callbackOrHandlers) => {
+			//REQUIRED: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.error
+			//REQUIRED: callbackOrHandlers.success
+
+			let errorHandler;
+			let callback;
+			
+			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+				callback = callbackOrHandlers;
+			} else {
+				errorHandler = callbackOrHandlers.error;
+				callback = callbackOrHandlers.success;
+			}
+			
+			__Native.showUnityAd(registerCallback(errorHandler), registerCallback(callback));
+		};
+
+		let loginGameService = self.loginGameService = (callbackOrHandlers) => {
+			//OPTIONAL: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.error
+			//OPTIONAL: callbackOrHandlers.success
+
+			let errorHandler;
+			let callback;
+			
+			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+				callback = callbackOrHandlers;
+			} else {
+				errorHandler = callbackOrHandlers.error;
+				callback = callbackOrHandlers.success;
 			}
 			
 			__Native.loginGameService(registerCallback(errorHandler), registerCallback(callback));
