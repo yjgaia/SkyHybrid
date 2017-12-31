@@ -15,6 +15,7 @@
 
         <activity
             android:name="co.hanul.hybridapp.MainActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="sensorLandscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

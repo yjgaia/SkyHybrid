@@ -185,8 +185,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        webView.onPause();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
+        webView.onResume();
 
         changeToFullscreen();
 
