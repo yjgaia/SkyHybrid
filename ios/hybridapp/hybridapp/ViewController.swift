@@ -6,7 +6,7 @@ import UnityAds
 class ViewController: UIViewController,
     WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler,
     SKProductsRequestDelegate, SKPaymentTransactionObserver,
-    UnityAdsDelegate {
+UnityAdsDelegate {
     
     var webView: WKWebView!
     
@@ -163,7 +163,7 @@ class ViewController: UIViewController,
             if (productId == nil) {
                 webView.evaluateJavaScript(errorHandlerName + "()")
             }
-            
+                
             else {
                 let purchasedTransaction = purchasedTransactions[productId!]
                 if (purchasedTransaction == nil) {
@@ -218,9 +218,9 @@ class ViewController: UIViewController,
     
     func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
         
-        var receipt: String = "undefined"
+        var purchaseReceipt: String = "undefined"
         do {
-            receipt = "'" + (try Data(contentsOf: Bundle.main.appStoreReceiptURL!).base64EncodedString()) + "'"
+            purchaseReceipt = "'" + (try Data(contentsOf: Bundle.main.appStoreReceiptURL!).base64EncodedString()) + "'"
         } catch {
             // ignore.
         }
@@ -229,7 +229,7 @@ class ViewController: UIViewController,
         
         for transaction in transactions {
             switch transaction.transactionState {
-            
+                
             case .purchased:
                 
                 let productId = transaction.payment.productIdentifier
@@ -237,21 +237,21 @@ class ViewController: UIViewController,
                 purchasedTransactions[productId] = transaction
                 
                 if (purchaseCallbackName != nil) {
-                    webView.evaluateJavaScript(purchaseCallbackName + "({productId:'" + productId + "',receipt:" + receipt + "})")
+                    webView.evaluateJavaScript(purchaseCallbackName + "({productId:'" + productId + "',purchaseReceipt:" + purchaseReceipt + "})")
                     purchaseCallbackName = nil
                 }
-                
+                    
                 else {
                     if (purchasedInfoStr != "") {
                         purchasedInfoStr += ","
                     }
-                    purchasedInfoStr += "{productId:'" + productId + "',receipt:" + receipt + "}"
+                    purchasedInfoStr += "{productId:'" + productId + "',purchaseReceipt:" + purchaseReceipt + "}"
                 }
                 
                 break
-            
+                
             case .failed:
-            
+                
                 if (purchaseCancelHandlerName != nil) {
                     webView.evaluateJavaScript(purchaseCancelHandlerName + "()")
                     purchaseCancelHandlerName = nil
@@ -260,7 +260,7 @@ class ViewController: UIViewController,
                 SKPaymentQueue.default().finishTransaction(transaction)
                 
                 break
-            
+                
             default:
                 break
             }
@@ -283,4 +283,17 @@ class ViewController: UIViewController,
     func unityAdsDidFinish(_ placementId: String, with state: UnityAdsFinishState) {
         webView.evaluateJavaScript(showUnityAdsCallbackName + "()")
     }
+    
+    func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
+        if navigationAction.targetFrame == nil, let url = navigationAction.request.url {
+            if url.description.lowercased().range(of: "http://") != nil ||
+                url.description.lowercased().range(of: "https://") != nil ||
+                url.description.lowercased().range(of: "mailto:") != nil ||
+                url.description.lowercased().range(of: "tel:") != nil {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil);
+            }
+        }
+        return nil
+    }
 }
+
