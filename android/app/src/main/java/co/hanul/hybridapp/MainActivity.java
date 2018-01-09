@@ -5,10 +5,9 @@ import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -25,9 +24,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
-import com.google.android.gms.games.GamesClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -36,12 +33,10 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-
 import co.hanul.hybridapp.iap.BillingController;
 import co.hanul.hybridapp.unityads.UnityAdsController;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     private static final int RC_LOGIN = 9001;
     private static final int RC_LOGIN_FOR_ACHIEVEMENT = 9002;
@@ -99,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
         // 웹뷰 로드
         webView = findViewById(Settings.webViewId);
+        webView.setBackgroundColor(Color.TRANSPARENT);
 
         // alert 디자인 변경
         webView.setWebChromeClient(new WebChromeClient() {
