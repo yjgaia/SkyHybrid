@@ -108,6 +108,29 @@ global.Native = OBJECT({
 				callbackName : registerCallback(callback)
 			});
 		};
+		
+		let restorePurchase = self.restorePurchase = (productId, callbackOrHandlers) => {
+			//REQUIRED: productId
+			//REQUIRED: callbackOrHandlers
+			//OPTIONAL: callbackOrHandlers.error
+			//REQUIRED: callbackOrHandlers.success
+
+			let errorHandler;
+			let callback;
+			
+			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
+				callback = callbackOrHandlers;
+			} else {
+				errorHandler = callbackOrHandlers.error;
+				callback = callbackOrHandlers.success;
+			}
+
+			window.webkit.messageHandlers.restorePurchase.postMessage({
+				productId : productId,
+				errorHandlerName : registerCallback(errorHandler),
+				callbackName : registerCallback(callback)
+			});
+		};
 
 		let showUnityAd = self.showUnityAd = (callbackOrHandlers) => {
 			//REQUIRED: callbackOrHandlers
