@@ -33,8 +33,6 @@
         <!-- for Android TV -->
         <activity
             android:name="co.hanul.hybridapp.TvActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="sensorLandscape"
             android:theme="@style/TvTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
