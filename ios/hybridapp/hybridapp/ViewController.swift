@@ -15,10 +15,12 @@ UnityAdsDelegate {
     var showUnityAdsCallbackName: String!
     
     var purchasedTransactions: [String:SKPaymentTransaction] = [:]
+    var restorePurchaseProductId: String!
     
     var loadPurchasedHandlerName: String!
     var purchaseCancelHandlerName: String!
     var purchaseCallbackName: String!
+    var restorePurchaseCallbackName: String!
     
     var registeredPushKey: String!
     var registerPushKeyHandlerName: String!
@@ -176,6 +178,24 @@ UnityAdsDelegate {
             }
         }
         
+        if (message.name == "restorePurchase") {
+            let data = message.body as! [String:AnyObject]
+            
+            let errorHandlerName = data["errorHandlerName"] as! String
+            
+            restorePurchaseProductId = data["productId"] as? String
+            restorePurchaseCallbackName = data["callbackName"] as! String
+            
+            // 초기화가 아니므로 삭제
+            loadPurchasedHandlerName = nil
+            
+            if (products == nil) {
+                webView.evaluateJavaScript(errorHandlerName + "()")
+            } else {
+                SKPaymentQueue.default().restoreCompletedTransactions()
+            }
+        }
+        
         if (message.name == "showUnityAd") {
             let data = message.body as! [String:AnyObject]
             
@@ -261,6 +281,24 @@ UnityAdsDelegate {
                 
                 break
                 
+            case .restored:
+                
+                let productId = transaction.payment.productIdentifier
+                
+                purchasedTransactions[productId] = transaction
+                
+                if (restorePurchaseCallbackName != nil) {
+                    
+                    if (restorePurchaseProductId == productId) {
+                        webView.evaluateJavaScript(restorePurchaseCallbackName + "({productId:'" + productId + "',purchaseReceipt:" + purchaseReceipt + "})")
+                    }
+                    
+                    restorePurchaseProductId = nil
+                    restorePurchaseCallbackName = nil
+                }
+                
+                break
+                
             default:
                 break
             }
@@ -296,4 +334,3 @@ UnityAdsDelegate {
         return nil
     }
 }
-
