@@ -18,3 +18,5 @@
 Hybrid App 프로젝트가 업데이트 된 경우 다음 파일들을 복사합니다.
 * `app/src/main/assets/java/co/hanul/hybridapp` 폴더 중 `Settings.java`를 제외한 전체
 * `app/src/main/assets/Native.js`
+
+## 웹 페이지를 불러와 앱에 표시하는 경우
