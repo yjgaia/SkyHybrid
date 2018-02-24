@@ -6,7 +6,7 @@ import UnityAds
 class ViewController: UIViewController,
     WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler,
     SKProductsRequestDelegate, SKPaymentTransactionObserver,
-UnityAdsDelegate {
+    UnityAdsDelegate {
     
     var webView: WKWebView!
     

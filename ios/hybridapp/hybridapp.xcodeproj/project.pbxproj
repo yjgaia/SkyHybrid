@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		393BA52F1FC602FE00AFF2AA /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 393BA52E1FC602FE00AFF2AA /* StoreKit.framework */; };
-		39735DC31FC46B3F00F16C9B /* UnityAds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39735DC21FC46B3F00F16C9B /* UnityAds.framework */; };
 		398BA6DE1FC3478100068823 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398BA6DD1FC3478100068823 /* AppDelegate.swift */; };
 		398BA6E01FC3478100068823 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398BA6DF1FC3478100068823 /* ViewController.swift */; };
 		398BA6E31FC3478100068823 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 398BA6E11FC3478100068823 /* Main.storyboard */; };
@@ -19,7 +18,6 @@
 /* Begin PBXFileReference section */
 		393BA52C1FC602FC00AFF2AA /* hybridapp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = hybridapp.entitlements; sourceTree = "<group>"; };
 		393BA52E1FC602FE00AFF2AA /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
-		39735DC21FC46B3F00F16C9B /* UnityAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = UnityAds.framework; sourceTree = "<group>"; };
 		398BA6DA1FC3478100068823 /* hybridapp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = hybridapp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		398BA6DD1FC3478100068823 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		398BA6DF1FC3478100068823 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -34,7 +32,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				39735DC31FC46B3F00F16C9B /* UnityAds.framework in Frameworks */,
 				393BA52F1FC602FE00AFF2AA /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -71,7 +68,6 @@
 			isa = PBXGroup;
 			children = (
 				393BA52C1FC602FC00AFF2AA /* hybridapp.entitlements */,
-				39735DC21FC46B3F00F16C9B /* UnityAds.framework */,
 				398BA6DD1FC3478100068823 /* AppDelegate.swift */,
 				398BA6DF1FC3478100068823 /* ViewController.swift */,
 				398BA6E11FC3478100068823 /* Main.storyboard */,

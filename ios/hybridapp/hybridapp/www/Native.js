@@ -34,8 +34,6 @@ global.Native = OBJECT({
 				}
 			}),
 
-			unityAdsGameId : INFO.getBrowserName() === 'Safari' ? CONFIG.unityAdsIOSGameId : CONFIG.unityAdsAndroidGameId,
-
 			productIds : CONFIG.productIds
 		});
 
@@ -127,27 +125,6 @@ global.Native = OBJECT({
 
 			window.webkit.messageHandlers.restorePurchase.postMessage({
 				productId : productId,
-				errorHandlerName : registerCallback(errorHandler),
-				callbackName : registerCallback(callback)
-			});
-		};
-
-		let showUnityAd = self.showUnityAd = (callbackOrHandlers) => {
-			//REQUIRED: callbackOrHandlers
-			//OPTIONAL: callbackOrHandlers.error
-			//REQUIRED: callbackOrHandlers.success
-
-			let errorHandler;
-			let callback;
-			
-			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-				callback = callbackOrHandlers;
-			} else {
-				errorHandler = callbackOrHandlers.error;
-				callback = callbackOrHandlers.success;
-			}
-			
-			window.webkit.messageHandlers.showUnityAd.postMessage({
 				errorHandlerName : registerCallback(errorHandler),
 				callbackName : registerCallback(callback)
 			});

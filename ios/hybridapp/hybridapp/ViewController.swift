@@ -1,18 +1,14 @@
 import UIKit
 import WebKit
 import StoreKit
-import UnityAds
 
 class ViewController: UIViewController,
     WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler,
-    SKProductsRequestDelegate, SKPaymentTransactionObserver,
-UnityAdsDelegate {
+    SKProductsRequestDelegate, SKPaymentTransactionObserver {
     
     var webView: WKWebView!
     
     var products: [SKProduct]!
-    
-    var showUnityAdsCallbackName: String!
     
     var purchasedTransactions: [String:SKPaymentTransaction] = [:]
     var restorePurchaseProductId: String!
@@ -41,9 +37,6 @@ UnityAdsDelegate {
         webViewContentController.add(self, name: "initPurchaseService")
         webViewContentController.add(self, name: "purchase")
         webViewContentController.add(self, name: "consumePurchase")
-        
-        // 유니티 광고 관련
-        webViewContentController.add(self, name: "showUnityAd")
         
         webView = WKWebView(frame: .zero, configuration: webViewConfig)
         webView.isOpaque = false
@@ -115,9 +108,6 @@ UnityAdsDelegate {
             } else {
                 webView.evaluateJavaScript(data["registerPushKeyHandlerName"] as! String + "('" + registeredPushKey + "')")
             }
-            
-            // 유니티 광고 초기화
-            UnityAds.initialize(data["unityAdsGameId"] as! String, delegate: self, testMode: data["isDevMode"] as! Bool)
             
             // 결제 초기화
             let request = SKProductsRequest(productIdentifiers: Set(data["productIds"] as! [String]))
@@ -193,19 +183,6 @@ UnityAdsDelegate {
                 webView.evaluateJavaScript(errorHandlerName + "()")
             } else {
                 SKPaymentQueue.default().restoreCompletedTransactions()
-            }
-        }
-        
-        if (message.name == "showUnityAd") {
-            let data = message.body as! [String:AnyObject]
-            
-            let errorHandlerName = data["errorHandlerName"] as! String
-            showUnityAdsCallbackName = data["callbackName"] as! String
-            
-            if (UnityAds.isReady() == true) {
-                UnityAds.show(self, placementId: "rewardedVideo")
-            } else {
-                webView.evaluateJavaScript(errorHandlerName + "()")
             }
         }
     }
@@ -310,16 +287,6 @@ UnityAdsDelegate {
             }
             loadPurchasedHandlerName = nil
         }
-    }
-    
-    func unityAdsReady(_ placementId: String) { }
-    
-    func unityAdsDidStart(_ placementId: String) { }
-    
-    func unityAdsDidError(_ error: UnityAdsError, withMessage message: String) { }
-    
-    func unityAdsDidFinish(_ placementId: String, with state: UnityAdsFinishState) {
-        webView.evaluateJavaScript(showUnityAdsCallbackName + "()")
     }
     
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
