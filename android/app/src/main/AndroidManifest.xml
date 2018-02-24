@@ -23,7 +23,7 @@
         <activity
             android:name="co.hanul.hybridapp.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="sensorLandscape">
+            android:screenOrientation="sensorPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -34,7 +34,7 @@
         <activity
             android:name="co.hanul.hybridapp.TvActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="sensorLandscape"
+            android:screenOrientation="sensorPortrait"
             android:theme="@style/TvTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

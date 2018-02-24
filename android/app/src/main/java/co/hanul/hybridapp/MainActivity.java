@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
@@ -26,13 +25,6 @@ import co.hanul.hybridapp.iap.BillingController;
 
 public class MainActivity extends Activity {
 
-    private static final int RC_LOGIN = 9001;
-    private static final int RC_LOGIN_FOR_ACHIEVEMENT = 9002;
-    private static final int RC_LOGIN_FOR_LEADERBOARD = 9003;
-
-    private static final int RC_ACHIEVEMENT_UI = 9011;
-    private static final int RC_LEADERBOARD_UI = 9012;
-
     private WebView webView;
 
     private BillingController billingController;
@@ -40,41 +32,10 @@ public class MainActivity extends Activity {
     public static String registeredPushKey;
     public static JSCallback registerPushKeyHandler;
 
-    private JSCallback loginGameServiceErrorHandler;
-    private JSCallback loginGameServiceCallback;
-    private JSCallback showAchievementsErrorHandler;
-    private JSCallback showLeaderboardsErrorHandler;
-    private String leaderboardId;
-
-    private boolean isSignedGameService;
-
-    private void changeToFullscreen() {
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(Settings.mainViewId);
-
-        // 전체 화면 설정
-        changeToFullscreen();
-        getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
-            @Override
-            public void onSystemUiVisibilityChange(int visibility) {
-                if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                    changeToFullscreen();
-                }
-            }
-        });
-
-        // 앱 실행중에는 화면이 꺼지지 않도록
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         // 웹뷰 디버깅 모드 ON
         WebView.setWebContentsDebuggingEnabled(true);
@@ -178,8 +139,6 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         webView.onResume();
-
-        changeToFullscreen();
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
