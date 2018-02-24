@@ -4,10 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -19,22 +17,12 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.EditText;
 
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.games.Games;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import co.hanul.hybridapp.iap.BillingController;
-import co.hanul.hybridapp.unityads.UnityAdsController;
 
 public class MainActivity extends Activity {
 
@@ -48,7 +36,6 @@ public class MainActivity extends Activity {
     private WebView webView;
 
     private BillingController billingController;
-    private UnityAdsController unityAdsController;
 
     public static String registeredPushKey;
     public static JSCallback registerPushKeyHandler;
@@ -218,7 +205,7 @@ public class MainActivity extends Activity {
         }
 
         @JavascriptInterface
-        public void init(boolean isDevMode, String registerPushKeyHandlerName, String unityAdsGameId) {
+        public void init(boolean isDevMode, String registerPushKeyHandlerName) {
 
             if (registeredPushKey == null) {
                 registerPushKeyHandler = new JSCallback(webView, registerPushKeyHandlerName);
@@ -235,8 +222,6 @@ public class MainActivity extends Activity {
 
                 new JSCallback(webView, registerPushKeyHandlerName).call(data);
             }
-
-            unityAdsController = new UnityAdsController(activity, unityAdsGameId, isDevMode);
         }
 
         @JavascriptInterface
@@ -252,155 +237,6 @@ public class MainActivity extends Activity {
         @JavascriptInterface
         public void consumePurchase(String productId, String errorHandlerName, String callbackName) {
             billingController.consumePurchase(productId, new JSCallback(webView, errorHandlerName), new JSCallback(webView, callbackName));
-        }
-
-        @JavascriptInterface
-        public void showUnityAd(String errorHandlerName, String callbackName) {
-            unityAdsController.show(new JSCallback(webView, errorHandlerName), new JSCallback(webView, callbackName));
-        }
-
-        @JavascriptInterface
-        public void loginGameService(String errorHandlerName, String callbackName) {
-            loginGameServiceErrorHandler = new JSCallback(webView, errorHandlerName);
-            loginGameServiceCallback = new JSCallback(webView, callbackName);
-
-            GoogleSignInClient signInClient = GoogleSignIn.getClient(activity, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
-            Intent intent = signInClient.getSignInIntent();
-            activity.startActivityForResult(intent, RC_LOGIN);
-        }
-
-        @JavascriptInterface
-        public void logoutGameService(final String callbackName) {
-            GoogleSignIn.getClient(activity, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN).signOut().addOnCompleteListener(activity, new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    isSignedGameService = false;
-                    new JSCallback(webView, callbackName).call(new JSONObject());
-                }
-            });
-        }
-
-        @JavascriptInterface
-        public void showAchievements(String errorHandlerName) {
-
-            if (isSignedGameService == true) {
-                Games.getAchievementsClient(activity, GoogleSignIn.getLastSignedInAccount(activity))
-                        .getAchievementsIntent()
-                        .addOnSuccessListener(new OnSuccessListener<Intent>() {
-                            @Override
-                            public void onSuccess(Intent intent) {
-                                startActivityForResult(intent, RC_ACHIEVEMENT_UI);
-                            }
-                        });
-            }
-
-            else {
-                showAchievementsErrorHandler = new JSCallback(webView, errorHandlerName);
-
-                GoogleSignInClient signInClient = GoogleSignIn.getClient(activity, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
-                Intent intent = signInClient.getSignInIntent();
-                activity.startActivityForResult(intent, RC_LOGIN_FOR_ACHIEVEMENT);
-            }
-        }
-
-        @JavascriptInterface
-        public void unlockAchievement(String achievementId) {
-            if (isSignedGameService == true) {
-                Games.getAchievementsClient(activity, GoogleSignIn.getLastSignedInAccount(activity)).unlock(achievementId);
-            }
-        }
-
-        @JavascriptInterface
-        public void incrementAchievement(String achievementId) {
-            if (isSignedGameService == true) {
-                Games.getAchievementsClient(activity, GoogleSignIn.getLastSignedInAccount(activity)).increment(achievementId, 1);
-            }
-        }
-
-        @JavascriptInterface
-        public void showLeaderboards(String _leaderboardId, String errorHandlerName) {
-
-            if (isSignedGameService == true) {
-                Games.getLeaderboardsClient(activity, GoogleSignIn.getLastSignedInAccount(activity))
-                        .getLeaderboardIntent(_leaderboardId)
-                        .addOnSuccessListener(new OnSuccessListener<Intent>() {
-                            @Override
-                            public void onSuccess(Intent intent) {
-                                startActivityForResult(intent, RC_LEADERBOARD_UI);
-                            }
-                        });
-            }
-
-            else {
-                leaderboardId = _leaderboardId;
-                showLeaderboardsErrorHandler = new JSCallback(webView, errorHandlerName);
-
-                GoogleSignInClient signInClient = GoogleSignIn.getClient(activity, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
-                Intent intent = signInClient.getSignInIntent();
-                activity.startActivityForResult(intent, RC_LOGIN_FOR_LEADERBOARD);
-            }
-        }
-
-        @JavascriptInterface
-        public void updateLeaderboardScore(String leaderboardId, String score) {
-            if (isSignedGameService == true) {
-                Games.getLeaderboardsClient(activity, GoogleSignIn.getLastSignedInAccount(activity)).submitScore(leaderboardId, Integer.parseInt(score));
-            }
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-
-        if (requestCode == RC_LOGIN) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(intent);
-            if (result.isSuccess()) {
-                Games.getGamesClient(this, result.getSignInAccount()).setViewForPopups(webView);
-                isSignedGameService = true;
-
-                loginGameServiceCallback.call(new JSONObject());
-            } else {
-                loginGameServiceErrorHandler.call(new JSONObject());
-            }
-        }
-
-        if (requestCode == RC_LOGIN_FOR_ACHIEVEMENT) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(intent);
-            if (result.isSuccess()) {
-                Games.getGamesClient(this, result.getSignInAccount()).setViewForPopups(webView);
-                isSignedGameService = true;
-
-                Games.getAchievementsClient(this, GoogleSignIn.getLastSignedInAccount(this))
-                        .getAchievementsIntent()
-                        .addOnSuccessListener(new OnSuccessListener<Intent>() {
-                            @Override
-                            public void onSuccess(Intent intent) {
-                                startActivityForResult(intent, RC_ACHIEVEMENT_UI);
-                            }
-                        });
-            } else {
-                showAchievementsErrorHandler.call(new JSONObject());
-            }
-        }
-
-        if (requestCode == RC_LOGIN_FOR_LEADERBOARD) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(intent);
-            if (result.isSuccess()) {
-                Games.getGamesClient(this, result.getSignInAccount()).setViewForPopups(webView);
-                isSignedGameService = true;
-
-                Games.getLeaderboardsClient(this, GoogleSignIn.getLastSignedInAccount(this))
-                        .getLeaderboardIntent(leaderboardId)
-                        .addOnSuccessListener(new OnSuccessListener<Intent>() {
-                            @Override
-                            public void onSuccess(Intent intent) {
-                                startActivityForResult(intent, RC_LEADERBOARD_UI);
-                            }
-                        });
-            } else {
-                showLeaderboardsErrorHandler.call(new JSONObject());
-            }
         }
     }
 }

@@ -29,7 +29,7 @@ global.Native = OBJECT({
 				registerPushKeyHandler(pushKey);
 			}
 			
-		}), INFO.getBrowserName() === 'Safari' ? CONFIG.unityAdsIOSGameId : CONFIG.unityAdsAndroidGameId);
+		}));
 
 		let setRegisterPushKeyHandler = self.setRegisterPushKeyHandler = (handler) => {
 			//OPTIONAL: handler
@@ -90,80 +90,6 @@ global.Native = OBJECT({
 			}
 
 			__Native.consumePurchase(productId, registerCallback(errorHandler), registerCallback(callback));
-		};
-
-		let showUnityAd = self.showUnityAd = (callbackOrHandlers) => {
-			//REQUIRED: callbackOrHandlers
-			//OPTIONAL: callbackOrHandlers.error
-			//REQUIRED: callbackOrHandlers.success
-
-			let errorHandler;
-			let callback;
-			
-			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-				callback = callbackOrHandlers;
-			} else {
-				errorHandler = callbackOrHandlers.error;
-				callback = callbackOrHandlers.success;
-			}
-			
-			__Native.showUnityAd(registerCallback(errorHandler), registerCallback(callback));
-		};
-
-		let loginGameService = self.loginGameService = (callbackOrHandlers) => {
-			//OPTIONAL: callbackOrHandlers
-			//OPTIONAL: callbackOrHandlers.error
-			//OPTIONAL: callbackOrHandlers.success
-
-			let errorHandler;
-			let callback;
-			
-			if (CHECK_IS_DATA(callbackOrHandlers) !== true) {
-				callback = callbackOrHandlers;
-			} else {
-				errorHandler = callbackOrHandlers.error;
-				callback = callbackOrHandlers.success;
-			}
-			
-			__Native.loginGameService(registerCallback(errorHandler), registerCallback(callback));
-		};
-		
-		let logoutGameService = self.logoutGameService = (callback) => {
-			//REQUIRED: callback
-			
-			__Native.logoutGameService(registerCallback(callback));
-		};
-		
-		let showAchievements = self.showAchievements = (errorHandler) => {
-			//REQUIRED: errorHandler
-			
-			__Native.showAchievements(registerCallback(errorHandler));
-		};
-		
-		let unlockAchievement = self.unlockAchievement = (achievementId) => {
-			//REQUIRED: achievementId
-			
-			__Native.unlockAchievement(achievementId);
-		};
-		
-		let incrementAchievement = self.incrementAchievement = (achievementId) => {
-			//REQUIRED: achievementId
-			
-			__Native.incrementAchievement(achievementId);
-		};
-		
-		let showLeaderboards = self.showLeaderboards = (leaderboardId, errorHandler) => {
-			//REQUIRED: leaderboardId
-			//REQUIRED: errorHandler
-			
-			__Native.showLeaderboards(leaderboardId, registerCallback(errorHandler));
-		};
-		
-		let updateLeaderboardScore = self.updateLeaderboardScore = (leaderboardId, score) => {
-			//REQUIRED: leaderboardId
-			//REQUIRED: score
-			
-			__Native.updateLeaderboardScore(leaderboardId, score);
 		};
 	}
 });

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "520370098401",
+    "firebase_url": "https://hybrid-app-test.firebaseio.com",
+    "project_id": "hybrid-app-test",
+    "storage_bucket": "hybrid-app-test.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:520370098401:android:93340e1cd8890d6b",
+        "android_client_info": {
+          "package_name": "co.hanul.hybridapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "520370098401-4eb59aetbavhg5aa3gd5vhhjotrbq7of.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3pkwrP4KEZOseDUDLKnA4gnxDdF9ySDY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
