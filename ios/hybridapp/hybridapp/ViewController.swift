@@ -48,8 +48,8 @@ class ViewController: UIViewController,
     // 상단 상태 바 여백
     override func viewWillAppear(_ animated: Bool) {
         var bounds:CGRect = webView.bounds
-        bounds.origin.y = 20;
-        bounds.size.height = bounds.size.height - 20;
+        bounds.origin.y = UIApplication.shared.statusBarFrame.height;
+        bounds.size.height = bounds.size.height - UIApplication.shared.statusBarFrame.height;
         webView.frame = bounds;
     }
     
