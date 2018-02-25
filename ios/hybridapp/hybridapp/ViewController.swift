@@ -45,6 +45,14 @@ class ViewController: UIViewController,
         view = webView
     }
     
+    // 상단 상태 바 여백
+    override func viewWillAppear(_ animated: Bool) {
+        var bounds:CGRect = webView.bounds
+        bounds.origin.y = 20;
+        bounds.size.height = bounds.size.height - 20;
+        webView.frame = bounds;
+    }
+    
     func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
         
         let alertController = UIAlertController(title: message, message: nil, preferredStyle: .alert)
@@ -191,9 +199,6 @@ class ViewController: UIViewController,
         super.viewDidLoad()
         
         (UIApplication.shared.delegate as! AppDelegate).viewController = self
-        
-        // 화면 계속 켜진 상태로 유지
-        UIApplication.shared.isIdleTimerDisabled = true
         
         // index.html 로딩
         if let path = Bundle.main.path(forResource: "index", ofType: "html", inDirectory: "www") {
