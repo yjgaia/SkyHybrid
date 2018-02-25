@@ -131,6 +131,12 @@ global.Native = OBJECT({
 				callbackName : registerCallback(callback)
 			});
 		};
+		
+		let openURL = self.openURL = (url) => {
+			//REQUIRED: url
+			
+			window.webkit.messageHandlers.openURL.postMessage(url);
+		};
 
 		let showUnityAd = self.showUnityAd = (callbackOrHandlers) => {
 			//REQUIRED: callbackOrHandlers

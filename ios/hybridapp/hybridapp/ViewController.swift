@@ -38,6 +38,8 @@ class ViewController: UIViewController,
         webViewContentController.add(self, name: "purchase")
         webViewContentController.add(self, name: "consumePurchase")
         
+        webViewContentController.add(self, name: "openURL")
+        
         webView = WKWebView(frame: .zero, configuration: webViewConfig)
         webView.isOpaque = false
         webView.uiDelegate = self
@@ -192,6 +194,10 @@ class ViewController: UIViewController,
             } else {
                 SKPaymentQueue.default().restoreCompletedTransactions()
             }
+        }
+        
+        if (message.name == "openURL") {
+            UIApplication.shared.open(URL(string : message.body as! String)!, options: [:], completionHandler: { (status) in })
         }
     }
     

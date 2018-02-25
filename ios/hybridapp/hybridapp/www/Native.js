@@ -107,6 +107,12 @@ global.Native = OBJECT({
 			});
 		};
 		
+		let openURL = self.openURL = (url) => {
+			//REQUIRED: url
+			
+			window.webkit.messageHandlers.openURL.postMessage(url);
+		};
+		
 		let restorePurchase = self.restorePurchase = (productId, callbackOrHandlers) => {
 			//REQUIRED: productId
 			//REQUIRED: callbackOrHandlers

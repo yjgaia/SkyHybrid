@@ -42,6 +42,8 @@ class ViewController: UIViewController,
         webViewContentController.add(self, name: "purchase")
         webViewContentController.add(self, name: "consumePurchase")
         
+        webViewContentController.add(self, name: "openURL")
+        
         // 유니티 광고 관련
         webViewContentController.add(self, name: "showUnityAd")
         
@@ -194,6 +196,10 @@ class ViewController: UIViewController,
             } else {
                 SKPaymentQueue.default().restoreCompletedTransactions()
             }
+        }
+        
+        if (message.name == "openURL") {
+            UIApplication.shared.open(URL(string : message.body as! String)!, options: [:], completionHandler: { (status) in })
         }
         
         if (message.name == "showUnityAd") {
