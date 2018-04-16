@@ -48,18 +48,26 @@ public class BillingController {
                     isServiceConnected = true;
 
                     JSONArray dataSet = new JSONArray();
-                    for (Purchase purchase : billingClient.queryPurchases(BillingClient.SkuType.INAPP).getPurchasesList()) {
 
-                        purchaseTokenMap.put(purchase.getSku(), purchase.getPurchaseToken());
+                    Purchase.PurchasesResult purchasesResult = billingClient.queryPurchases(BillingClient.SkuType.INAPP);
+                    if (purchasesResult != null) {
+                        List<Purchase> purchasesList = purchasesResult.getPurchasesList();
+                        if (purchasesList != null) {
 
-                        JSONObject data = new JSONObject();
-                        try {
-                            data.put("productId", purchase.getSku());
-                            data.put("purchaseToken", purchase.getPurchaseToken());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            for (Purchase purchase : purchasesList) {
+
+                                purchaseTokenMap.put(purchase.getSku(), purchase.getPurchaseToken());
+
+                                JSONObject data = new JSONObject();
+                                try {
+                                    data.put("productId", purchase.getSku());
+                                    data.put("purchaseToken", purchase.getPurchaseToken());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                dataSet.put(data);
+                            }
                         }
-                        dataSet.put(data);
                     }
 
                     if (dataSet.length() > 0) {
