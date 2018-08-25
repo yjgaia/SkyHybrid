@@ -28,8 +28,13 @@ global.Native = OBJECT({
 			if (registerPushKeyHandler !== undefined) {
 				registerPushKeyHandler(pushKey);
 			}
-			
-		}), INFO.getBrowserName() === 'Safari' ? CONFIG.unityAdsIOSGameId : CONFIG.unityAdsAndroidGameId);
+		}),
+		
+		INFO.getBrowserName() === 'Safari' ? CONFIG.unityAdsIOSGameId : CONFIG.unityAdsAndroidGameId,
+		
+		INFO.getBrowserName() === 'Safari' ? CONFIG.adMobIOSAppId : CONFIG.adMobAndroidAppId,
+
+		CONFIG.testDeviceId);
 
 		let setRegisterPushKeyHandler = self.setRegisterPushKeyHandler = (handler) => {
 			//OPTIONAL: handler
@@ -108,6 +113,27 @@ global.Native = OBJECT({
 			}
 			
 			__Native.showUnityAd(registerCallback(errorHandler), registerCallback(callback));
+		};
+
+		let initAdMobInterstitialAd = self.initAdMobInterstitialAd = (adId) => {
+			//REQUIRED: adId
+			
+			__Native.initAdMobInterstitialAd(adId);
+		};
+
+		let showAdMobInterstitialAd = self.showAdMobInterstitialAd = () => {
+			__Native.showAdMobInterstitialAd();
+		};
+
+		let initAdMobRewardedVideoAd = self.initAdMobRewardedVideoAd = (adId, callback) => {
+			//REQUIRED: adId
+			//REQUIRED: callback
+
+			__Native.initAdMobRewardedVideoAd(adId, registerCallback(callback));
+		};
+
+		let showRewardedVideoAd = self.showRewardedVideoAd = () => {
+			__Native.showRewardedVideoAd();
 		};
 
 		let loginGameService = self.loginGameService = (callbackOrHandlers) => {

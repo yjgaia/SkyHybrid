@@ -1,12 +1,10 @@
 package co.hanul.hybridapp.unityads;
 
 import android.app.Activity;
-import android.util.Log;
 
 import com.unity3d.ads.IUnityAdsListener;
 import com.unity3d.ads.UnityAds;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import co.hanul.hybridapp.JSCallback;

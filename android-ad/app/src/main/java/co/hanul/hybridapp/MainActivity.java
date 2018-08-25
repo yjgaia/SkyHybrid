@@ -33,6 +33,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import co.hanul.hybridapp.admob.AdMobController;
 import co.hanul.hybridapp.iap.BillingController;
 import co.hanul.hybridapp.unityads.UnityAdsController;
 
@@ -49,6 +50,7 @@ public class MainActivity extends Activity {
 
     private BillingController billingController;
     private UnityAdsController unityAdsController;
+    private AdMobController adMobController;
 
     public static String registeredPushKey;
     public static JSCallback registerPushKeyHandler;
@@ -218,7 +220,7 @@ public class MainActivity extends Activity {
         }
 
         @JavascriptInterface
-        public void init(boolean isDevMode, String registerPushKeyHandlerName, String unityAdsGameId) {
+        public void init(boolean isDevMode, String registerPushKeyHandlerName, String unityAdsGameId, String adMobAppId, String testDeviceId) {
 
             if (registeredPushKey == null) {
                 registerPushKeyHandler = new JSCallback(webView, registerPushKeyHandlerName);
@@ -237,6 +239,7 @@ public class MainActivity extends Activity {
             }
 
             unityAdsController = new UnityAdsController(activity, unityAdsGameId, isDevMode);
+            adMobController = new AdMobController(activity, adMobAppId, isDevMode, testDeviceId);
         }
 
         @JavascriptInterface
@@ -257,6 +260,26 @@ public class MainActivity extends Activity {
         @JavascriptInterface
         public void showUnityAd(String errorHandlerName, String callbackName) {
             unityAdsController.show(new JSCallback(webView, errorHandlerName), new JSCallback(webView, callbackName));
+        }
+
+        @JavascriptInterface
+        public void initAdMobInterstitialAd(String adId) {
+            adMobController.initInterstitialAd(adId);
+        }
+
+        @JavascriptInterface
+        public void showAdMobInterstitialAd() {
+            adMobController.showInterstitialAd();
+        }
+
+        @JavascriptInterface
+        public void initAdMobRewardedVideoAd(String adId, String callbackName) {
+            adMobController.initRewardedVideoAd(adId, new JSCallback(webView, callbackName));
+        }
+
+        @JavascriptInterface
+        public void showRewardedVideoAd() {
+            adMobController.showRewardedVideoAd();
         }
 
         @JavascriptInterface
