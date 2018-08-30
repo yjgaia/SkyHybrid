@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.KeyEvent;
@@ -14,6 +15,7 @@ import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -46,7 +48,10 @@ public class MainActivity extends Activity {
     private static final int RC_ACHIEVEMENT_UI = 9011;
     private static final int RC_LEADERBOARD_UI = 9012;
 
+    private static final int RC_SELECT_FILE = 9013;
+
     private WebView webView;
+    private ValueCallback<Uri[]> filePathCallback;
 
     private BillingController billingController;
     private UnityAdsController unityAdsController;
@@ -162,6 +167,22 @@ public class MainActivity extends Activity {
                         })
                         .create()
                         .show();
+                return true;
+            }
+
+            @Override
+            public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> _filePathCallback, FileChooserParams fileChooserParams) {
+
+                if (filePathCallback != null) {
+                    filePathCallback.onReceiveValue(null);
+                }
+                filePathCallback = _filePathCallback;
+
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("image/*");
+                startActivityForResult(Intent.createChooser(intent, "Image Chooser"), RC_SELECT_FILE);
+
                 return true;
             }
         });
@@ -423,6 +444,16 @@ public class MainActivity extends Activity {
                         });
             } else {
                 showLeaderboardsErrorHandler.call(new JSONObject());
+            }
+        }
+
+        if (requestCode == RC_SELECT_FILE && filePathCallback != null) {
+            if (resultCode == RESULT_OK) {
+                filePathCallback.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, intent));
+                filePathCallback = null;
+            } else {
+                filePathCallback.onReceiveValue(null);
+                filePathCallback = null;
             }
         }
     }
