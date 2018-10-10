@@ -26,6 +26,7 @@ class ViewController: UIViewController,
         let webViewContentController = WKUserContentController()
         webViewConfig.userContentController = webViewContentController
         webViewConfig.mediaTypesRequiringUserActionForPlayback = []
+        webViewConfig.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
         
         webViewContentController.add(self, name: "init")
         
