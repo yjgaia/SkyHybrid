@@ -259,8 +259,12 @@ public class MainActivity extends Activity {
                 new JSCallback(webView, registerPushKeyHandlerName).call(data);
             }
 
-            unityAdsController = new UnityAdsController(activity, unityAdsGameId, isDevMode);
-            adMobController = new AdMobController(activity, adMobAppId, isDevMode, testDeviceId);
+            if (unityAdsGameId != null) {
+                unityAdsController = new UnityAdsController(activity, unityAdsGameId, isDevMode);
+            }
+            if (adMobAppId != null) {
+                adMobController = new AdMobController(activity, adMobAppId, isDevMode, testDeviceId);
+            }
         }
 
         @JavascriptInterface
