@@ -241,7 +241,7 @@ public class MainActivity extends Activity {
         }
 
         @JavascriptInterface
-        public void init(boolean isDevMode, String registerPushKeyHandlerName, String unityAdsGameId, String adMobAppId, String testDeviceId) {
+        public void init(boolean isDevMode, String registerPushKeyHandlerName, String unityAdsGameId, String adMobAppId, String adMobTestDeviceId) {
 
             if (registeredPushKey == null) {
                 registerPushKeyHandler = new JSCallback(webView, registerPushKeyHandlerName);
@@ -263,7 +263,7 @@ public class MainActivity extends Activity {
                 unityAdsController = new UnityAdsController(activity, unityAdsGameId, isDevMode);
             }
             if (adMobAppId != null) {
-                adMobController = new AdMobController(activity, adMobAppId, isDevMode, testDeviceId);
+                adMobController = new AdMobController(activity, adMobAppId, isDevMode, adMobTestDeviceId);
             }
         }
 
@@ -303,8 +303,8 @@ public class MainActivity extends Activity {
         }
 
         @JavascriptInterface
-        public void showRewardedVideoAd() {
-            adMobController.showRewardedVideoAd();
+        public void showAdMobRewardedVideoAd() {
+            adMobController.showAdMobRewardedVideoAd();
         }
 
         @JavascriptInterface

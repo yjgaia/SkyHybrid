@@ -2,17 +2,28 @@ import UIKit
 import WebKit
 import StoreKit
 import UnityAds
+import GoogleMobileAds
 
 class ViewController: UIViewController,
     WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler,
     SKProductsRequestDelegate, SKPaymentTransactionObserver,
-    UnityAdsDelegate {
+    UnityAdsDelegate,
+    GADInterstitialDelegate,
+    GADRewardBasedVideoAdDelegate {
     
     var webView: WKWebView!
     
     var products: [SKProduct]!
     
+    var isDevMode: Bool!
+    
     var showUnityAdsCallbackName: String!
+    
+    var adMobTestDeviceId: String!
+    var adMobInterstitialAdId: String!
+    var adMobInterstitial: GADInterstitial!
+    var adMobRewardedVideoAdId: String!
+    var showAdMobRewardedVideoCallbackName:String!
     
     var purchasedTransactions: [String:SKPaymentTransaction] = [:]
     var restorePurchaseProductId: String!
@@ -47,6 +58,12 @@ class ViewController: UIViewController,
         
         // 유니티 광고 관련
         webViewContentController.add(self, name: "showUnityAd")
+        
+        // 애드몹 광고 관련
+        webViewContentController.add(self, name: "initAdMobInterstitialAd")
+        webViewContentController.add(self, name: "showAdMobInterstitialAd")
+        webViewContentController.add(self, name: "initAdMobRewardedVideoAd")
+        webViewContentController.add(self, name: "showAdMobRewardedVideoAd")
         
         webView = WKWebView(frame: .zero, configuration: webViewConfig)
         webView.isOpaque = false
@@ -113,6 +130,10 @@ class ViewController: UIViewController,
         if (message.name == "init") {
             let data = message.body as! [String:AnyObject]
             
+            if (data["isDevMode"] != nil) {
+                isDevMode = data["isDevMode"] as! Bool
+            }
+            
             if (registeredPushKey == nil) {
                 registerPushKeyHandlerName = data["registerPushKeyHandlerName"] as! String
             } else {
@@ -120,7 +141,18 @@ class ViewController: UIViewController,
             }
             
             // 유니티 광고 초기화
-            UnityAds.initialize(data["unityAdsGameId"] as! String, delegate: self, testMode: data["isDevMode"] as! Bool)
+            if (data["unityAdsGameId"] != nil) {
+                UnityAds.initialize(data["unityAdsGameId"] as! String, delegate: self, testMode: isDevMode)
+            }
+            
+            // 애드몹 광고 초기화
+            if (data["adMobAppId"] != nil) {
+                GADMobileAds.configure(withApplicationID: data["adMobAppId"] as! String)
+                
+                if (data["adMobTestDeviceId"] != nil) {
+                    adMobTestDeviceId = data["adMobTestDeviceId"] as! String
+                }
+            }
             
             // 결제 초기화
             let request = SKProductsRequest(productIdentifiers: Set(data["productIds"] as! [String]))
@@ -213,6 +245,46 @@ class ViewController: UIViewController,
                 UnityAds.show(self, placementId: "rewardedVideo")
             } else {
                 webView.evaluateJavaScript(errorHandlerName + "()")
+            }
+        }
+        
+        if (message.name == "initAdMobInterstitialAd") {
+            adMobInterstitialAdId = message.body as! String
+            
+            adMobInterstitial = GADInterstitial(adUnitID: adMobInterstitialAdId)
+            adMobInterstitial.delegate = self
+            
+            let request = GADRequest()
+            if (isDevMode == true) {
+                request.testDevices = [adMobTestDeviceId]
+            }
+            adMobInterstitial.load(request)
+        }
+        
+        if (message.name == "showAdMobInterstitialAd") {
+            if (adMobInterstitial.isReady == true) {
+                adMobInterstitial.present(fromRootViewController: self)
+            }
+        }
+        
+        if (message.name == "initAdMobRewardedVideoAd") {
+            let data = message.body as! [String:AnyObject]
+            
+            adMobRewardedVideoAdId = data["adId"] as! String
+            showAdMobRewardedVideoCallbackName = data["callbackName"] as! String
+            
+            GADRewardBasedVideoAd.sharedInstance().delegate = self
+            
+            let request = GADRequest()
+            if (isDevMode == true) {
+                request.testDevices = [adMobTestDeviceId]
+            }
+            GADRewardBasedVideoAd.sharedInstance().load(request, withAdUnitID: adMobRewardedVideoAdId)
+        }
+        
+        if (message.name == "showAdMobRewardedVideoAd") {
+            if (GADRewardBasedVideoAd.sharedInstance().isReady == true) {
+                GADRewardBasedVideoAd.sharedInstance().present(fromRootViewController: self)
             }
         }
     }
@@ -327,6 +399,31 @@ class ViewController: UIViewController,
     
     func unityAdsDidFinish(_ placementId: String, with state: UnityAdsFinishState) {
         webView.evaluateJavaScript(showUnityAdsCallbackName + "()")
+    }
+    
+    func interstitialDidDismissScreen(_ ad: GADInterstitial) {
+        adMobInterstitial = GADInterstitial(adUnitID: adMobInterstitialAdId)
+        adMobInterstitial.delegate = self
+        
+        let request = GADRequest()
+        if (isDevMode == true) {
+            request.testDevices = [adMobTestDeviceId]
+        }
+        adMobInterstitial.load(request)
+    }
+    
+    func rewardBasedVideoAd(_ rewardBasedVideoAd: GADRewardBasedVideoAd, didRewardUserWith reward: GADAdReward) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.webView.evaluateJavaScript(self.showAdMobRewardedVideoCallbackName + "()")
+        }
+    }
+    
+    func rewardBasedVideoAdDidClose(_ rewardBasedVideoAd: GADRewardBasedVideoAd) {
+        let request = GADRequest()
+        if (isDevMode == true) {
+            request.testDevices = [adMobTestDeviceId]
+        }
+        GADRewardBasedVideoAd.sharedInstance().load(request, withAdUnitID: adMobRewardedVideoAdId)
     }
     
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {

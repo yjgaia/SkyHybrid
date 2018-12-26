@@ -35,6 +35,10 @@ global.Native = OBJECT({
 			}),
 
 			unityAdsGameId : INFO.getBrowserName() === 'Safari' ? CONFIG.unityAdsIOSGameId : CONFIG.unityAdsAndroidGameId,
+			
+			adMobAppId : INFO.getBrowserName() === 'Safari' ? CONFIG.adMobIOSAppId : CONFIG.adMobAndroidAppId,
+			
+			adMobTestDeviceId : CONFIG.adMobTestDeviceId,
 
 			productIds : CONFIG.productIds
 		});
@@ -157,6 +161,30 @@ global.Native = OBJECT({
 				errorHandlerName : registerCallback(errorHandler),
 				callbackName : registerCallback(callback)
 			});
+		};
+
+		let initAdMobInterstitialAd = self.initAdMobInterstitialAd = (adId) => {
+			//REQUIRED: adId
+			
+			window.webkit.messageHandlers.initAdMobInterstitialAd.postMessage(adId);
+		};
+
+		let showAdMobInterstitialAd = self.showAdMobInterstitialAd = () => {
+			window.webkit.messageHandlers.showAdMobInterstitialAd.postMessage('');
+		};
+
+		let initAdMobRewardedVideoAd = self.initAdMobRewardedVideoAd = (adId, callback) => {
+			//REQUIRED: adId
+			//REQUIRED: callback
+
+			window.webkit.messageHandlers.initAdMobRewardedVideoAd.postMessage({
+				adId : adId,
+				callbackName : registerCallback(callback)
+			});
+		};
+
+		let showAdMobRewardedVideoAd = self.showAdMobRewardedVideoAd = () => {
+			window.webkit.messageHandlers.showAdMobRewardedVideoAd.postMessage('');
 		};
 	}
 });

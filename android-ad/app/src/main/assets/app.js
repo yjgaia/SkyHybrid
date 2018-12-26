@@ -144,7 +144,7 @@ RUN(() => {
 		c : '애드몹 리워드 광고 보기',
 		on : {
 			tap : () => {
-				Native.showRewardedVideoAd();
+				Native.showAdMobRewardedVideoAd();
 			}
 		}
 	}).appendTo(BODY);

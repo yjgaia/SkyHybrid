@@ -25,12 +25,12 @@ public class AdMobController implements RewardedVideoAdListener {
     private RewardedVideoAd rewardedVideoAd;
     private JSCallback showRewardedVideoAdCallback;
     
-    public AdMobController(Activity activity, String adMobAppId, boolean isDevMode, String testDeviceId) {
+    public AdMobController(Activity activity, String appId, boolean isDevMode, String testDeviceId) {
         this.activity = activity;
         this.isDevMode = isDevMode;
         this.testDeviceId = testDeviceId;
 
-        MobileAds.initialize(activity, adMobAppId);
+        MobileAds.initialize(activity, appId);
     }
 
     public void initInterstitialAd(final String adId) {

@@ -27,6 +27,9 @@
 		398BA6E41FC3478100068823 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		398BA6E91FC3478100068823 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		398BA6F01FC3555500068823 /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; path = www; sourceTree = "<group>"; };
+		A7005E9BD748529E0D310AA9 /* Pods-hybridapp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hybridapp.release.xcconfig"; path = "Pods/Target Support Files/Pods-hybridapp/Pods-hybridapp.release.xcconfig"; sourceTree = "<group>"; };
+		B1B1E92BC4B5BC9D044532D1 /* Pods-hybridapp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hybridapp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-hybridapp/Pods-hybridapp.debug.xcconfig"; sourceTree = "<group>"; };
+		DC09FB9601B35AD3AAE3CCE2 /* libPods-hybridapp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-hybridapp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,10 +45,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		163FD7D74F9C220F1DFF633E /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				B1B1E92BC4B5BC9D044532D1 /* Pods-hybridapp.debug.xcconfig */,
+				A7005E9BD748529E0D310AA9 /* Pods-hybridapp.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		393BA52D1FC602FE00AFF2AA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				393BA52E1FC602FE00AFF2AA /* StoreKit.framework */,
+				DC09FB9601B35AD3AAE3CCE2 /* libPods-hybridapp.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -56,6 +69,7 @@
 				398BA6DC1FC3478100068823 /* hybridapp */,
 				398BA6DB1FC3478100068823 /* Products */,
 				393BA52D1FC602FE00AFF2AA /* Frameworks */,
+				163FD7D74F9C220F1DFF633E /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -89,6 +103,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 398BA6EC1FC3478100068823 /* Build configuration list for PBXNativeTarget "hybridapp" */;
 			buildPhases = (
+				281417C08C8236C0F7CE6565 /* [CP] Check Pods Manifest.lock */,
 				398BA6D61FC3478100068823 /* Sources */,
 				398BA6D71FC3478100068823 /* Frameworks */,
 				398BA6D81FC3478100068823 /* Resources */,
@@ -109,7 +124,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0910;
-				LastUpgradeCheck = 0910;
+				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = YJ;
 				TargetAttributes = {
 					398BA6D91FC3478100068823 = {
@@ -157,6 +172,27 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		281417C08C8236C0F7CE6565 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-hybridapp-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		398BA6D61FC3478100068823 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -195,6 +231,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -202,6 +239,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -252,6 +290,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -259,6 +298,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -290,6 +330,7 @@
 		};
 		398BA6ED1FC3478100068823 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B1B1E92BC4B5BC9D044532D1 /* Pods-hybridapp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = hybridapp/hybridapp.entitlements;
@@ -310,6 +351,7 @@
 		};
 		398BA6EE1FC3478100068823 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A7005E9BD748529E0D310AA9 /* Pods-hybridapp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = hybridapp/hybridapp.entitlements;

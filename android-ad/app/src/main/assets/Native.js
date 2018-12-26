@@ -34,7 +34,7 @@ global.Native = OBJECT({
 		
 		INFO.getBrowserName() === 'Safari' ? CONFIG.adMobIOSAppId : CONFIG.adMobAndroidAppId,
 
-		CONFIG.testDeviceId);
+		CONFIG.adMobTestDeviceId);
 
 		let setRegisterPushKeyHandler = self.setRegisterPushKeyHandler = (handler) => {
 			//OPTIONAL: handler
@@ -132,8 +132,8 @@ global.Native = OBJECT({
 			__Native.initAdMobRewardedVideoAd(adId, registerCallback(callback));
 		};
 
-		let showRewardedVideoAd = self.showRewardedVideoAd = () => {
-			__Native.showRewardedVideoAd();
+		let showAdMobRewardedVideoAd = self.showAdMobRewardedVideoAd = () => {
+			__Native.showAdMobRewardedVideoAd();
 		};
 
 		let loginGameService = self.loginGameService = (callbackOrHandlers) => {

@@ -43,6 +43,12 @@ RUN(() => {
 		
 		alert('Consume 되지 않은 결제 기록: ' + JSON.stringify(dataSet));
 	});
+
+	Native.initAdMobInterstitialAd('ca-app-pub-3940256099942544/4411468910');
+
+	Native.initAdMobRewardedVideoAd('ca-app-pub-3940256099942544/1712485313', () => {
+	    alert('리워드 광고 시청 완료!');
+	});
 	
 	A({
 		style : buttonStyle,
@@ -121,6 +127,26 @@ RUN(() => {
 						}
 					});
 				});
+			}
+		}
+	}).appendTo(BODY);
+
+	A({
+		style : buttonStyle,
+		c : '애드몹 전면 광고 보기',
+		on : {
+			tap : () => {
+				Native.showAdMobInterstitialAd();
+			}
+		}
+	}).appendTo(BODY);
+
+	A({
+		style : buttonStyle,
+		c : '애드몹 리워드 광고 보기',
+		on : {
+			tap : () => {
+				Native.showAdMobRewardedVideoAd();
 			}
 		}
 	}).appendTo(BODY);
