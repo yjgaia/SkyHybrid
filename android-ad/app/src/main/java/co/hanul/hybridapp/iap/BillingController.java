@@ -113,14 +113,18 @@ public class BillingController {
                         break;
                     }
 
-                    purchaseSuccessHandler.call(data);
+                    if (purchaseSuccessHandler != null) {
+                        purchaseSuccessHandler.call(data);
+                    }
                 }
 
                 else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {
-                    purchaseCancelHandler.call(new JSONObject());
+                    if (purchaseCancelHandler != null) {
+                        purchaseCancelHandler.call(new JSONObject());
+                    }
                 }
 
-                else {
+                else if (purchaseErrorHandler != null) {
                     purchaseErrorHandler.call(new JSONObject());
                 }
             }
