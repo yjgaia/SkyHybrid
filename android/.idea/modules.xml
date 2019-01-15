@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/android.iml" filepath="$PROJECT_DIR$/android.iml" />
+      <module fileurl="file://C:\Users\syj\Documents\GitHub\HybridApp\android\android.iml" filepath="C:\Users\syj\Documents\GitHub\HybridApp\android\android.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://C:\Users\syj\Documents\GitHub\HybridApp\android\app\app.iml" filepath="C:\Users\syj\Documents\GitHub\HybridApp\android\app\app.iml" />
     </modules>
   </component>
 </project>

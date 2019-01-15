@@ -192,6 +192,7 @@ public class MainActivity extends Activity {
         webSettings.setAllowUniversalAccessFromFileURLs(true);
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
+        webSettings.setTextZoom(100);
 
         webView.loadUrl("file:///android_asset/index.html");
 
