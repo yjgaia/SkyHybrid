@@ -3,11 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/android-ad.iml" filepath="$PROJECT_DIR$/android-ad.iml" />
-      <module fileurl="file://C:\Users\syj\Documents\GitHub\HybridApp\android-ad\android-ad.iml" filepath="C:\Users\syj\Documents\GitHub\HybridApp\android-ad\android-ad.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\Users\syj\Documents\GitHub\HybridApp\android-ad\app\app.iml" filepath="C:\Users\syj\Documents\GitHub\HybridApp\android-ad\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/unity-ads/unity-ads.iml" filepath="$PROJECT_DIR$/unity-ads/unity-ads.iml" />
-      <module fileurl="file://C:\Users\syj\Documents\GitHub\HybridApp\android-ad\unity-ads\unity-ads.iml" filepath="C:\Users\syj\Documents\GitHub\HybridApp\android-ad\unity-ads\unity-ads.iml" />
     </modules>
   </component>
 </project>

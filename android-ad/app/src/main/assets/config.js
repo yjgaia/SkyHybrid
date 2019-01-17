@@ -1,6 +1,10 @@
 // 개발 모드 ON
 CONFIG.isDevMode = true;
 
+// 안드로이드 푸시 채널 정보
+CONFIG.androidPushChannelId = '__HYBRID_APP_PUSH_CHANNEL';
+CONFIG.androidPushChannelTitle = 'Hybrid App';
+
 // 유니티 광고 Game Id
 CONFIG.unityAdsIOSGameId = '1604163';
 CONFIG.unityAdsAndroidGameId = '1604164';

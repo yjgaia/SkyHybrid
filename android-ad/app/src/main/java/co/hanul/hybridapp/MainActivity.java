@@ -2,11 +2,14 @@ package co.hanul.hybridapp;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.KeyEvent;
@@ -242,7 +245,21 @@ public class MainActivity extends Activity {
         }
 
         @JavascriptInterface
-        public void init(boolean isDevMode, String registerPushKeyHandlerName, String unityAdsGameId, String adMobAppId, String adMobTestDeviceId) {
+        public void init(boolean isDevMode, String pushChannelId, String pushChannelTitle, String registerPushKeyHandlerName, String unityAdsGameId, String adMobAppId, String adMobTestDeviceId) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+                NotificationChannel channel = new NotificationChannel(pushChannelId, pushChannelTitle, NotificationManager.IMPORTANCE_LOW);
+
+                channel.enableLights(true);
+
+                channel.setLightColor(Color.RED);
+                channel.enableVibration(true);
+                channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+
+                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.createNotificationChannel(channel);
+            }
 
             if (registeredPushKey == null) {
                 registerPushKeyHandler = new JSCallback(webView, registerPushKeyHandlerName);
@@ -305,7 +322,7 @@ public class MainActivity extends Activity {
 
         @JavascriptInterface
         public void showAdMobRewardedVideoAd() {
-            adMobController.showAdMobRewardedVideoAd();
+            adMobController.showRewardedVideoAd();
         }
 
         @JavascriptInterface

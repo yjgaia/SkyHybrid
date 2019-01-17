@@ -21,7 +21,7 @@ global.Native = OBJECT({
 		let pushKey;
 		let registerPushKeyHandler;
 		
-		__Native.init(CONFIG.isDevMode, registerCallback((data) => {
+		__Native.init(CONFIG.isDevMode, CONFIG.androidPushChannelId, CONFIG.androidPushChannelTitle, registerCallback((data) => {
 			
 			pushKey = data.pushKey;
 			
