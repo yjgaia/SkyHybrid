@@ -312,4 +312,8 @@ class ViewController: UIViewController,
         }
         return nil
     }
+    
+    func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+        webView.reload()
+    }
 }
