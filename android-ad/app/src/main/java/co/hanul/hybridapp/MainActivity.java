@@ -200,6 +200,7 @@ public class MainActivity extends Activity {
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setTextZoom(100);
+        webSettings.setMediaPlaybackRequiresUserGesture(false);
 
         webView.loadUrl("file:///android_asset/index.html");
 
