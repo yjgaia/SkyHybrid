@@ -186,5 +186,53 @@ global.Native = OBJECT({
 		let showAdMobRewardedVideoAd = self.showAdMobRewardedVideoAd = () => {
 			window.webkit.messageHandlers.showAdMobRewardedVideoAd.postMessage('');
 		};
+		
+		let playBGM = self.playBGM = (path) => {
+			//REQUIRED: path
+			
+			if (path.indexOf('.') !== -1) {
+				path = path.substring(0, path.indexOf('.'));
+			}
+
+			window.webkit.messageHandlers.playBGM.postMessage(path);
+		};
+		
+		let pauseBGM = self.pauseBGM = (path) => {
+			//REQUIRED: path
+			
+			if (path.indexOf('.') !== -1) {
+				path = path.substring(0, path.indexOf('.'));
+			}
+			
+			window.webkit.messageHandlers.pauseBGM.postMessage(path);
+		};
+		
+		let stopBGM = self.stopBGM = (path) => {
+			//REQUIRED: path
+			
+			if (path.indexOf('.') !== -1) {
+				path = path.substring(0, path.indexOf('.'));
+			}
+			
+			window.webkit.messageHandlers.stopBGM.postMessage(path);
+		};
+		
+		let setBGMVolume = self.setBGMVolume = (params) => {
+			//REQUIRED: params
+			//REQUIRED: params.path
+			//REQUIRED: params.volume
+
+			let path = params.path;
+			let volume = params.volume;
+			
+			if (path.indexOf('.') !== -1) {
+				path = path.substring(0, path.indexOf('.'));
+			}
+			
+			window.webkit.messageHandlers.setBGMVolume.postMessage({
+				path : path,
+				volume : volume
+			});
+		};
 	}
 });

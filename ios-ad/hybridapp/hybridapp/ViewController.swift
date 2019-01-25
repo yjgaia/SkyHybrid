@@ -3,6 +3,7 @@ import WebKit
 import StoreKit
 import UnityAds
 import GoogleMobileAds
+import AVFoundation
 
 class ViewController: UIViewController,
     WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler,
@@ -36,6 +37,9 @@ class ViewController: UIViewController,
     var registeredPushKey: String!
     var registerPushKeyHandlerName: String!
     
+    var audioPlayers: [String:AVAudioPlayer] = [:]
+    var audioVolumes: [String:NSNumber] = [:]
+    
     override func loadView() {
         let webViewConfig = WKWebViewConfiguration()
         let webViewContentController = WKUserContentController()
@@ -64,6 +68,12 @@ class ViewController: UIViewController,
         webViewContentController.add(self, name: "showAdMobInterstitialAd")
         webViewContentController.add(self, name: "initAdMobRewardedVideoAd")
         webViewContentController.add(self, name: "showAdMobRewardedVideoAd")
+        
+        // BGM 관련
+        webViewContentController.add(self, name: "playBGM")
+        webViewContentController.add(self, name: "pauseBGM")
+        webViewContentController.add(self, name: "stopBGM")
+        webViewContentController.add(self, name: "setBGMVolume")
         
         webView = WKWebView(frame: .zero, configuration: webViewConfig)
         webView.isOpaque = false
@@ -232,7 +242,7 @@ class ViewController: UIViewController,
         }
         
         if (message.name == "openURL") {
-            UIApplication.shared.open(URL(string : message.body as! String)!, options: [:], completionHandler: { (status) in })
+            UIApplication.shared.open(URL(string : message.body as! String)!, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: { (status) in })
         }
         
         if (message.name == "showUnityAd") {
@@ -287,6 +297,73 @@ class ViewController: UIViewController,
                 GADRewardBasedVideoAd.sharedInstance().present(fromRootViewController: self)
             }
         }
+        
+        if (message.name == "playBGM") {
+            
+            let path = message.body as! String
+            
+            do {
+                // 플레이어 생성
+                if (audioPlayers[path] == nil) {
+                    
+                    if let fileURL = Bundle.main.path(forResource: "www/" + path, ofType: "mp3") {
+                        
+                        let player = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: fileURL))
+                        player.numberOfLoops = -1
+                        player.play()
+                        
+                        // 볼륨 설정
+                        if (audioVolumes[path] != nil) {
+                            player.volume = audioVolumes[path]!.floatValue
+                        } else {
+                            player.volume = 0.8
+                        }
+                        
+                        audioPlayers[path] = player
+                    }
+                }
+                    
+                else {
+                    audioPlayers[path]?.play()
+                }
+                
+            } catch {
+                // ignore.
+            }
+        }
+        
+        if (message.name == "pauseBGM") {
+            
+            let path = message.body as! String
+            
+            if (audioPlayers[path] != nil) {
+                audioPlayers[path]?.pause()
+            }
+        }
+        
+        if (message.name == "stopBGM") {
+            
+            let path = message.body as! String
+            
+            if (audioPlayers[path] != nil) {
+                audioPlayers[path]?.stop()
+                audioPlayers[path]?.currentTime = 0
+            }
+        }
+        
+        if (message.name == "setBGMVolume") {
+            
+            let data = message.body as! [String:AnyObject]
+            
+            let path = data["path"] as! String
+            let volume = data["volume"] as! NSNumber
+            
+            if (audioPlayers[path] != nil) {
+                audioPlayers[path]?.volume = volume.floatValue
+            }
+            
+            audioVolumes[path] = volume
+        }
     }
     
     override func viewDidLoad() {
@@ -312,7 +389,7 @@ class ViewController: UIViewController,
     }
     
     func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
-        products = response.products;
+        products = response.products
     }
     
     func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
@@ -432,7 +509,7 @@ class ViewController: UIViewController,
                 url.description.lowercased().range(of: "https://") != nil ||
                 url.description.lowercased().range(of: "mailto:") != nil ||
                 url.description.lowercased().range(of: "tel:") != nil {
-                UIApplication.shared.open(url, options: [:], completionHandler: nil);
+                UIApplication.shared.open(url, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: nil)
             }
         }
         return nil
@@ -441,4 +518,9 @@ class ViewController: UIViewController,
     func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
         webView.reload()
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(_ input: [String: Any]) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)})
 }
