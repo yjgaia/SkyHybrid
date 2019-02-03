@@ -99,6 +99,9 @@ public class MainActivity extends Activity {
         // 앱 실행중에는 화면이 꺼지지 않도록
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        // 네비게이션 바를 검정색으로
+        getWindow().setNavigationBarColor(Color.BLACK);
+
         // 웹뷰 디버깅 모드 ON
         WebView.setWebContentsDebuggingEnabled(true);
 

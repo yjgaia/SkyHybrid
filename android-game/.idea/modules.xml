@@ -3,10 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/android-game.iml" filepath="$PROJECT_DIR$/android-game.iml" />
-      <module fileurl="file://C:\Users\YJ\Documents\GitHub\SkyHybrid\android-game\android-game.iml" filepath="C:\Users\YJ\Documents\GitHub\SkyHybrid\android-game\android-game.iml" />
       <module fileurl="file://C:\Users\YJ\Documents\workspace\SkyHybrid\android-game\android-game.iml" filepath="C:\Users\YJ\Documents\workspace\SkyHybrid\android-game\android-game.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\Users\YJ\Documents\GitHub\SkyHybrid\android-game\app\app.iml" filepath="C:\Users\YJ\Documents\GitHub\SkyHybrid\android-game\app\app.iml" />
       <module fileurl="file://C:\Users\YJ\Documents\workspace\SkyHybrid\android-game\app\app.iml" filepath="C:\Users\YJ\Documents\workspace\SkyHybrid\android-game\app\app.iml" />
     </modules>
   </component>
