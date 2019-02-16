@@ -417,6 +417,11 @@ public class MainActivity extends Activity {
                 Games.getLeaderboardsClient(activity, GoogleSignIn.getLastSignedInAccount(activity)).submitScore(leaderboardId, Integer.parseInt(score));
             }
         }
+
+        @JavascriptInterface
+        public void exit() {
+            activity.finishAndRemoveTask();
+        }
     }
 
     @Override

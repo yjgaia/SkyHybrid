@@ -264,6 +264,11 @@ public class MainActivity extends Activity {
         public void consumePurchase(String productId, String errorHandlerName, String callbackName) {
             billingController.consumePurchase(productId, new JSCallback(webView, errorHandlerName), new JSCallback(webView, callbackName));
         }
+
+        @JavascriptInterface
+        public void exit() {
+            activity.finishAndRemoveTask();
+        }
     }
 
     @Override
