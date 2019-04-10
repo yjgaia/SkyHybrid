@@ -516,6 +516,13 @@ class ViewController: UIViewController,
     }
     
     func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+        
+        // 재생중인 모든 BGM 중지
+        for (_, audioPlayer) in audioPlayers {
+            audioPlayer.stop()
+            audioPlayer.currentTime = 0
+        }
+        
         webView.reload()
     }
 }
