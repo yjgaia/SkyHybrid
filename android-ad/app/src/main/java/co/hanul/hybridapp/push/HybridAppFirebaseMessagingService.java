@@ -32,8 +32,7 @@ public class HybridAppFirebaseMessagingService extends FirebaseMessagingService 
                     .setContentText((CharSequence) data.get("message"))
                     .setAutoCancel(true)
                     .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                    .setContentIntent(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT))
-                    .setChannelId((String) data.get("channelId"));
+                    .setContentIntent(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT));
 
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify((int) System.currentTimeMillis(), notificationBuilder.build());
